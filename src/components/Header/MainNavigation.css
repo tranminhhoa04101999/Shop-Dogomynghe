@@ -1,0 +1,122 @@
+.header {
+  height: var(--header-height);
+  background-color: var(--primary-color);
+  z-index: 10;
+}
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-left {
+  display: flex;
+}
+.header-logo {
+  line-height: var(--header-height);
+  overflow: hidden;
+  border-radius: 20px;
+}
+.header-logo__img {
+  height: 66px;
+}
+.header-nav__list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  margin-left: 40px;
+}
+.header-nav__item {
+  display: flex;
+  align-items: center;
+}
+.header-nav__item-link {
+  color: var(--white-color-header);
+  font-size: 1.6rem;
+  padding: 22px 10px;
+}
+.header-nav__item-link:hover {
+  color: var(--primary-color-red);
+  cursor: pointer;
+}
+.header-nav__item-link--active {
+  color: var(--primary-color-red);
+}
+.header-right {
+  display: flex;
+  align-items: center;
+}
+.header-right__search {
+  display: flex;
+  width: 250px;
+  height: 3rem;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  background-color: var(--white-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.header-right__search-input {
+  height: 100%;
+  width: 90%;
+  outline: none;
+  border: none;
+  border-right: 1px solid var(--border-color);
+  padding: 0px 5px;
+}
+.header-right__search-btn {
+  border: none;
+  background-color: var(--white-color);
+}
+.header-right__search-btn:hover .header-right__search-btn-icon {
+  color: var(--primary-color-red);
+}
+.header-right__search-btn:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.header-right__search-btn-icon {
+  color: var(--primary-color);
+}
+.header-right__user {
+  margin: 0 20px;
+}
+.header-right__user-link {
+  padding: 10px;
+}
+.header-right__user:hover .header-right__user-icon {
+  color: var(--primary-color-red);
+}
+.header-right__user-icon {
+  font-size: 1.6rem;
+  color: var(--white-color-header);
+}
+.header-right__cart {
+  position: relative;
+}
+.header-right__cart:hover .header-right__cart-icon {
+  color: var(--primary-color-red);
+}
+.header-right__cart-notice {
+  background-color: var(--primary-color-red);
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -10px;
+  right: -5px;
+  border-radius: 50%;
+  color: var(--white-color-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: 2px solid var(--primary-color);
+}
+.header-right__cart-link {
+  padding: 10px;
+}
+.header-right__cart-icon {
+  font-size: 1.6rem;
+  color: var(--white-color-header);
+}
