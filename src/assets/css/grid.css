@@ -5,7 +5,7 @@
 }
 
 .grid.wide {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -302,6 +302,7 @@
   }
 
   .l-1,
+  .l-1-5,
   .l-2,
   .l-2-4,
   .l-3,
@@ -320,6 +321,10 @@
   .l-1 {
     flex: 0 0 8.33333%;
     max-width: 8.33333%;
+  }
+  .l-1-5 {
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
   }
 
   .l-2 {
@@ -465,6 +470,7 @@
   }
 
   .wide .l-1,
+  .wide .l-1-5,
   .wide .l-2,
   .wide .l-2-4,
   .wide .l-3,
@@ -483,6 +489,10 @@
   .wide .l-1 {
     flex: 0 0 8.33333%;
     max-width: 8.33333%;
+  }
+  .wide .l-1-5 {
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
   }
 
   .wide .l-2 {

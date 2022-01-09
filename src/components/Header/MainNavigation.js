@@ -28,7 +28,7 @@ const NavBar = (props) => {
                   Trang chủ
                 </NavLink>
               </li>
-              <li className="header-nav__item">
+              <li className="header-nav__item header-nav__item-show-navProduct">
                 <NavLink
                   to="/sanpham"
                   className={({ isActive }) =>
@@ -39,6 +39,7 @@ const NavBar = (props) => {
                 >
                   Sản phẩm
                 </NavLink>
+                {/* danh mục khi hover btn SP */}
                 <div className="header-product">
                   <div className="grid wide">
                     <div className="row sm-gutter header-product__row-add">
@@ -81,20 +82,28 @@ const NavBar = (props) => {
                           </ul>
                         </div>
                       </div>
-                      <div className="col l-2">
+                      <div className="col l-2 border-right-left">
                         <div className="header-product__item-text">
-                          <span className="header-product__item-text-title">
-                            Sản Phẩm
-                          </span>
+                          <span className="header-product__item-text-title">Áo</span>
                           <ul className="header-product__item-text-list">
                             <li className="header-product__item-text-item">
                               <NavLink to="#" className="header-product__item-text-link">
-                                Áo Khoác Blazer
+                                GU Unisex GENZ
                               </NavLink>
                             </li>
                             <li className="header-product__item-text-item">
                               <NavLink to="#" className="header-product__item-text-link">
-                                Online Special
+                                Áo Thun
+                              </NavLink>
+                            </li>
+                            <li className="header-product__item-text-item">
+                              <NavLink to="#" className="header-product__item-text-link">
+                                Áo Khoác
+                              </NavLink>
+                            </li>
+                            <li className="header-product__item-text-item">
+                              <NavLink to="#" className="header-product__item-text-link">
+                                Áo Sơ Mi
                               </NavLink>
                             </li>
                           </ul>
@@ -102,16 +111,28 @@ const NavBar = (props) => {
                       </div>
                       <div className="col l-2">
                         <div className="header-product__item-text">
-                          <span className="header-product__item-text-title">Ưu đãi</span>
+                          <span className="header-product__item-text-title">
+                            Quần, Phụ Kiện
+                          </span>
                           <ul className="header-product__item-text-list">
                             <li className="header-product__item-text-item">
                               <NavLink to="#" className="header-product__item-text-link">
-                                Ưu đãi thành viên mới
+                                Quần Jean
                               </NavLink>
                             </li>
                             <li className="header-product__item-text-item">
                               <NavLink to="#" className="header-product__item-text-link">
-                                Online Special
+                                Quần Dài
+                              </NavLink>
+                            </li>
+                            <li className="header-product__item-text-item">
+                              <NavLink to="#" className="header-product__item-text-link">
+                                Balo, Túi
+                              </NavLink>
+                            </li>
+                            <li className="header-product__item-text-item">
+                              <NavLink to="#" className="header-product__item-text-link">
+                                Nón
                               </NavLink>
                             </li>
                           </ul>

@@ -1,10 +1,14 @@
 import { Input, Button } from "antd";
+import Categories from "./Categories";
+import ShowProduct from "./ShowProduct";
+import SlideSlick from "./SliderSlick";
 
 const TrangChu = (props) => {
   return (
-    <div>
-      <h1>trangchu</h1>
-      <p>test</p>
+    <div className="container-trangchu">
+      <SlideSlick />
+      <Categories />
+      <ShowProduct />
     </div>
   );
 };

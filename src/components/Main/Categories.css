@@ -1,0 +1,50 @@
+.categories {
+  height: auto;
+  padding-top: 100px;
+  margin: 0 50px;
+}
+.categories-title {
+  line-height: 3.4rem;
+  font-size: 3.3rem;
+  font-weight: 300;
+  font-style: italic;
+  display: block;
+  margin: 0 0 15px;
+}
+.categories-link {
+  font-size: 1.5rem;
+  color: #96614f;
+  text-decoration: underline;
+  font-weight: 600;
+  margin-bottom: 42px;
+  display: inline-block;
+  width: auto;
+  margin-bottom: 42px;
+}
+.categories-link:hover {
+  color: var(--primary-color-red);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.categories-row {
+  margin-top: 42px;
+}
+.categories-item {
+  width: 100%;
+  text-align: center;
+}
+.categories-img {
+  width: 112px;
+  height: 112px;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+.categories-label {
+  display: block;
+  font-size: 2rem;
+  color: #000;
+  font-weight: 300;
+  margin-top: 22px;
+}
