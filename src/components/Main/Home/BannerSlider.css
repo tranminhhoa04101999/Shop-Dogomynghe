@@ -1,0 +1,50 @@
+.container-slider {
+  height: 800px;
+  margin-top: 50px;
+  position: relative;
+}
+.slider-item {
+  height: 760px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.slider-item__img {
+  height: 100%;
+  width: 1400px;
+}
+
+/* class hệ thống của slick slider react */
+.slick-prev,
+.slick-next {
+  font-size: 15px !important;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  border-radius: 50%;
+  height: 38px;
+  width: 38px;
+  z-index: 1;
+}
+.slick-prev {
+  top: 50%;
+  left: 40px;
+}
+.slick-next {
+  top: 50%;
+  right: 40px;
+}
+.slick-prev:hover,
+.slick-next:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+.slick-prev:before,
+.slick-next:before {
+  content: "" !important;
+}
+/* --- */
+.slider-slick-icon {
+  font-size: 1.6rem;
+  color: #888;
+}

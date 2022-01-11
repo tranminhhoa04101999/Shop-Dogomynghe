@@ -1,5 +1,6 @@
 import { Header } from "antd/lib/layout/layout";
 import React, { Fragment } from "react";
+import Footer from "../Footer/Footer";
 import MainNavigation from "./MainNavigation";
 
 const Layout = (props) => {
@@ -7,6 +8,7 @@ const Layout = (props) => {
     <Fragment>
       <MainNavigation />
       <main>{props.children}</main>
+      <Footer />
     </Fragment>
   );
 };

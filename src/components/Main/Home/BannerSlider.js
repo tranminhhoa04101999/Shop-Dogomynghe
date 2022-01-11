@@ -1,51 +1,24 @@
 import Slider from "react-slick";
 import { NavLink } from "react-router-dom";
-import "./SliderSlick.css";
-const SlideSlick = (props) => {
-  function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
+import "./BannerSlider.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+const BannerSlider = (props) => {
+  function PrevArrow(props) {
+    const { className, onClick } = props;
     return (
-      <div
-        className={className}
-        style={{
-          ...style,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#999",
-          position: "absolute",
-          borderRadius: "50%",
-          height: "38px",
-          width: "38px",
-          top: "50%",
-          left: "28px",
-          zIndex: 1,
-        }}
-        onClick={onClick}
-      />
+      <div className={className} onClick={onClick}>
+        <FontAwesomeIcon icon={faArrowLeft} className="slider-slick-icon" />
+      </div>
     );
   }
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
+  function NextArrow(props) {
+    const { className, onClick } = props;
     return (
-      <div
-        className={className}
-        style={{
-          ...style,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#999",
-          position: "absolute",
-          borderRadius: "50%",
-          height: "38px",
-          width: "38px",
-          top: "50%",
-          right: "28px",
-          zIndex: 1,
-        }}
-        onClick={onClick}
-      />
+      <div className={className} onClick={onClick}>
+        <FontAwesomeIcon icon={faArrowRight} className="slider-slick-icon" />
+      </div>
     );
   }
 
@@ -55,8 +28,8 @@ const SlideSlick = (props) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <SamplePrevArrow />,
-    prevArrow: <SampleNextArrow />,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
   return (
     <div className="grid wide">
@@ -95,4 +68,4 @@ const SlideSlick = (props) => {
   );
 };
 
-export default SlideSlick;
+export default BannerSlider;
