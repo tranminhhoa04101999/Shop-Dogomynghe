@@ -44,7 +44,7 @@ const SliderSaleProdut = (props) => {
   return (
     <div className="grid wide">
       <div className="product-sale">
-        <span className="product-sale-title">Sản Phẩm Mới</span>
+        <span className="product-sale-title">Sản Phẩm Giảm Giá</span>
         <NavLink to="/" className="product-sale-link">
           Xem Các Sản Phẩm Giảm Giá
         </NavLink>

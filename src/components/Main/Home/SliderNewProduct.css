@@ -18,6 +18,11 @@
   width: auto;
   margin-bottom: 42px;
 }
+.products-link:hover {
+  color: var(--primary-color-red);
+  cursor: pointer;
+  text-decoration: underline;
+}
 .products-title {
   line-height: 3.4rem;
   font-size: 3.3rem;
