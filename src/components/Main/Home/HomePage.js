@@ -4,6 +4,7 @@ import SliderNewProduct from "./SliderNewProduct";
 import BannerSlider from "./BannerSlider";
 import SliderSaleProdut from "./SliderSaleProdut";
 import "./HomePage.css";
+import { Outlet } from "react-router-dom";
 
 const HomePage = (props) => {
   return (

@@ -1,3 +1,202 @@
 .container-product-details {
-  height: 500px;
+  margin-top: var(--header-height);
+  padding: 100px 60px 0px;
+  margin-bottom: 100px;
+}
+
+.breadcrums {
+  margin-bottom: 15px;
+}
+.breadcrums-gach {
+  padding: 0 8px;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.breadcrums-link {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: var(--text-color);
+}
+.breadcrums-link:hover {
+  color: var(--primary-color-red);
+  text-decoration: underline;
+}
+.P-details__list-img {
+}
+.P-details__list-img-link {
+  margin-bottom: 15px;
+}
+.P-details__list-img-small {
+  width: 106px;
+  height: 160px;
+  border-radius: 8px;
+}
+.P-details__main {
+}
+.P-details__main-img {
+  width: 100%;
+  height: 800px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.P-details-right {
+  padding-left: 100px;
+}
+.P-details-right__title {
+  font-size: 3rem;
+  line-height: 4rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+.P-details-right__quantity-SKU {
+  display: flex;
+  justify-content: space-between;
+}
+.P-details-right__sku {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.P-details-right__quantity {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: #969696;
+}
+.P-details-right__price {
+  margin-top: 10px;
+}
+.P-details-right__price-current {
+  font-size: 2.5rem;
+  line-height: 3rem;
+  color: #ff0000;
+  margin-right: 8px;
+}
+.P-details-right__price-old {
+  font-size: 1.6rem;
+  line-height: 2rem;
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+.P-details-right__select-swatches {
+  padding: 22px 0;
+  margin: 22px 0;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-color: rgba(195, 192, 172, 0.6);
+}
+.P-details-right__color {
+}
+.P-details-right__wrapper-img {
+  margin-bottom: 20px;
+}
+.P-details-right__color-title {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.P-details-right__color-item {
+  position: relative;
+}
+.P-details-right__color-item--active .P-details-right__color-item--img {
+  border: 1px solid var(--primary-color-red);
+}
+.P-details-right__color-item--active .P-details-right__color-item--active-tich {
+  display: block;
+}
+.P-details-right__color-item--active-tich {
+  position: absolute;
+  bottom: -44px;
+  right: 5px;
+  display: none;
+}
+.P-details-right__color-item--img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+.P-details-right__color-item--img:hover {
+  border: 1px solid var(--primary-color-red);
+}
+.P-details-right__list-size {
+  display: flex;
+}
+.P-details-right__item-size {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-right: 4px;
+}
+.P-details-right__item-size span {
+  font-size: 1.5rem;
+  list-style: 2rem;
+  color: #505252;
+  margin-right: 4px;
+}
+.P-details-right__item-size--active-tich {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  display: none;
+}
+.P-details-right__item-size--active .P-details-right__item-size--active-tich {
+  display: block;
+}
+.P-details-right__item-size--active {
+  border: 1px solid var(--primary-color-red);
+}
+.P-details-right__quantity-area {
+  display: flex;
+  align-items: center;
+}
+.P-details-right__quantity-area-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 6px 12px;
+}
+.P-details-right__quantity-area-num {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  font-weight: 300;
+  margin: 0 14px;
+}
+.P-details-right__wrap-addcart {
+  display: flex;
+  height: 48px;
+  margin-top: 20px;
+}
+.P-details-right__addcart {
+  border: none;
+  outline: none;
+  background-color: var(--btn-color);
+  margin-right: 10px;
+  color: #fff;
+  border: 1px solid var(--btn-color);
+  font-size: 1.6rem;
+  line-height: 2rem;
+  padding: 0 20px;
+  cursor: pointer;
+}
+.P-details-right__wrap-description {
+  margin-top: 20px;
+}
+.P-details-right__des-title {
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  color: var(--btn-color);
+}
+.P-details-right__des-text {
+  font-size: 1.4rem;
+  line-height: 1.8rem;
 }

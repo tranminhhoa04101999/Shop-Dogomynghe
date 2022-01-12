@@ -1,5 +1,5 @@
 import "./SliderNewProduct.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
@@ -50,7 +50,7 @@ const SliderNewProduct = (props) => {
         </NavLink>
         <Slider {...settings}>
           <div className="products-col">
-            <NavLink to="productsDetails">
+            <NavLink to="/ProductDetails">
               <img
                 src="https://cdn2.yame.vn/pimg/ao-thun-sweater-linh-vat-tigeer-ver1-0020579/c7aaf91b-0a33-8d00-c8b7-0018ac703c4a.jpg?w=540&h=756&c=true"
                 alt=""
