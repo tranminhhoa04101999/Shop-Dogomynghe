@@ -1,11 +1,38 @@
-import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faFeatherAlt } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import "./ProductDetails.css";
 
+const LIST_IMG = [
+  {
+    id: 1,
+    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg",
+  },
+  {
+    id: 2,
+    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg",
+  },
+  {
+    id: 3,
+    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg",
+  },
+];
+
 const ProductDetails = (props) => {
+  const [imgMain, setImgMain] = useState("");
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    // set hinh mac dinh cho imgImain
+    setImgMain(LIST_IMG[0].link);
   }, []);
+
+  const imgSmallClick = (event) => {
+    setImgMain(event.target.src);
+  };
+
   return (
     <div className="grid wide">
       <div className="container-product-details">
@@ -26,36 +53,20 @@ const ProductDetails = (props) => {
         <div className="row">
           <div className="col l-2">
             <div className="P-details__list-img">
-              <div className="P-details__list-img-link">
-                <img
-                  src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg"
-                  alt=""
-                  className="P-details__list-img-small"
-                />
-              </div>
-              <div className="P-details__list-img-link">
-                <img
-                  src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg"
-                  alt=""
-                  className="P-details__list-img-small"
-                />
-              </div>
-              <div className="P-details__list-img-link">
-                <img
-                  src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg"
-                  alt=""
-                  className="P-details__list-img-small"
-                />
-              </div>
+              {LIST_IMG.map((item) => (
+                <div
+                  key={item.id}
+                  className="P-details__list-img-link"
+                  onClick={imgSmallClick}
+                >
+                  <img src={item.link} alt="" className="P-details__list-img-small" />
+                </div>
+              ))}
             </div>
           </div>
           <div className="col l-5">
             <div className="P-details__main">
-              <img
-                src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg"
-                alt=""
-                className="P-details__main-img"
-              />
+              <img src={imgMain} alt="" className="P-details__main-img" />
             </div>
           </div>
           <div className="col l-5 ">
@@ -77,7 +88,7 @@ const ProductDetails = (props) => {
                 <div className="P-details-right__color">
                   <div className="P-details-right__wrapper-img">
                     <a
-                      href="#"
+                      href="/"
                       className="P-details-right__color-item P-details-right__color-item--active"
                     >
                       <img
@@ -91,7 +102,7 @@ const ProductDetails = (props) => {
                         className="P-details-right__color-item--active-tich"
                       />
                     </a>
-                    <a href="#" className="P-details-right__color-item">
+                    <a href="/" className="P-details-right__color-item">
                       <img
                         src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg"
                         alt=""
@@ -149,6 +160,42 @@ const ProductDetails = (props) => {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="wrap-product-star-reviews">
+          <div className="wrap-star-reviews">
+            <h2 className="product-star__title">Đánh giá sản phẩm</h2>
+            <div className="product-star__summary">
+              <a href="/" className="product-star__summary-icon">
+                <FontAwesomeIcon icon={faStar} />
+              </a>
+              <a href="/" className="product-star__summary-icon">
+                <FontAwesomeIcon icon={faStar} />
+              </a>
+              <a href="/" className="product-star__summary-icon">
+                <FontAwesomeIcon icon={faStar} />
+              </a>
+              <a href="/" className="product-star__summary-icon">
+                <FontAwesomeIcon icon={faStar} />
+              </a>
+              <a href="/" className="product-star__summary-icon">
+                <FontAwesomeIcon icon={faStar} />
+              </a>
+            </div>
+            <div className="product-star__summary-text">Dựa trên 0 đánh giá</div>
+            <div className="product-star__write-rev">
+              <FontAwesomeIcon
+                icon={faFeatherAlt}
+                className="product-star__write-rev-icon"
+              />
+              Viết đánh giá
+            </div>
+          </div>
+          <div className="wrap-cmt-reviews">
+            <span className="cmt-reviews__label">
+              Đánh giá
+              <span className="cmt-reviews__count">0</span>
+            </span>
           </div>
         </div>
       </div>
