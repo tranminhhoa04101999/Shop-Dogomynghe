@@ -190,7 +190,7 @@ const NavBar = (props) => {
             </div>
             <div className="header-right__cart">
               <span className="header-right__cart-notice">0</span>
-              <NavLink to="#" className="header-right__cart-link">
+              <NavLink to="/cart" className="header-right__cart-link">
                 <FontAwesomeIcon
                   icon={faShoppingCart}
                   className="header-right__cart-icon"
