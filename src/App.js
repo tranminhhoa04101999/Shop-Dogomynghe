@@ -6,6 +6,10 @@ import HomePage from "./components/Main/Home/HomePage";
 import Layout from "./components/Header/Layout";
 import ProductDetails from "./components/Main/Products/ProductDetails";
 import Cart from "./components/Main/Cart";
+import Login from "./components/Main/Login";
+import Account from "./components/Main/Account/Account";
+import Register from "./components/Main/Register";
+import CustomerInfo from "./components/Main/Account/CustomerInfo";
 
 function App() {
   return (
@@ -15,6 +19,11 @@ function App() {
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/ProductDetails" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/account" element={<Account />}>
+          <Route path="customerinfo" element={<CustomerInfo />} />
+        </Route>
       </Routes>
     </Layout>
   );

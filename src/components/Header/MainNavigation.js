@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUser, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 const NavBar = (props) => {
+  const loginOnclick = (props) => {};
+
   return (
     <header className="header">
       <div className="grid wide">
@@ -184,7 +186,7 @@ const NavBar = (props) => {
               </button>
             </div>
             <div className="header-right__user">
-              <NavLink to="#" className="header-right__user-link">
+              <NavLink to="/register" className="header-right__user-link">
                 <FontAwesomeIcon icon={faUser} className="header-right__user-icon" />
               </NavLink>
             </div>

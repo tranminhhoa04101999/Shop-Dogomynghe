@@ -1,0 +1,38 @@
+.account-wrap {
+  margin: var(--header-height) 0 10px;
+  padding: 100px 0;
+  background-color: var(--background-primary-2);
+}
+.account__title {
+  font-size: 3.3rem;
+  line-height: 4rem;
+  color: var(--text-color);
+  letter-spacing: 1px;
+  font-weight: 300;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.account-left__list {
+  list-style: none;
+}
+.account-left__list li + li {
+  border-top: 2px solid rgba(195, 192, 172, 0.6);
+  padding-top: 15px;
+  margin-top: 15px;
+}
+.account-left__item {
+  padding-bottom: 20px;
+}
+.account-left__item-title {
+  font-size: 2rem;
+  line-height: 3rem;
+  letter-spacing: 0.4px;
+  margin-bottom: 12px;
+  font-weight: 300;
+}
+.account-left__item-link {
+  text-decoration: none;
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+  color: var(--text-color);
+}
