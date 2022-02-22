@@ -1,12 +1,10 @@
-import { NavLink } from "react-router-dom";
-import "./MainNavigation.css";
-import logo from "../../assets/img/logo.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faUser, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { NavLink } from 'react-router-dom';
+import './MainNavigation.css';
+import logo from '../../assets/img/logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = (props) => {
-  const loginOnclick = (props) => {};
-
   return (
     <header className="header">
       <div className="grid wide">
@@ -23,8 +21,8 @@ const NavBar = (props) => {
                   to="/"
                   className={({ isActive }) =>
                     isActive
-                      ? "header-nav__item-link header-nav__item-link--active "
-                      : "header-nav__item-link"
+                      ? 'header-nav__item-link header-nav__item-link--active '
+                      : 'header-nav__item-link'
                   }
                 >
                   Trang chủ
@@ -35,8 +33,8 @@ const NavBar = (props) => {
                   to="/sanpham"
                   className={({ isActive }) =>
                     isActive
-                      ? "header-nav__item-link header-nav__item-link--active"
-                      : "header-nav__item-link"
+                      ? 'header-nav__item-link header-nav__item-link--active'
+                      : 'header-nav__item-link'
                   }
                 >
                   Sản phẩm
@@ -149,8 +147,8 @@ const NavBar = (props) => {
                   to="/tintuc"
                   className={({ isActive }) =>
                     isActive
-                      ? "header-nav__item-link header-nav__item-link--active"
-                      : "header-nav__item-link"
+                      ? 'header-nav__item-link header-nav__item-link--active'
+                      : 'header-nav__item-link'
                   }
                 >
                   Tin tức
@@ -161,8 +159,8 @@ const NavBar = (props) => {
                   to="/gioithieu"
                   className={({ isActive }) =>
                     isActive
-                      ? "header-nav__item-link header-nav__item-link--active"
-                      : "header-nav__item-link"
+                      ? 'header-nav__item-link header-nav__item-link--active'
+                      : 'header-nav__item-link'
                   }
                 >
                   Giới thiệu

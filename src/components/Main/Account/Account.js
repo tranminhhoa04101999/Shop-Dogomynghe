@@ -2,6 +2,7 @@ import "./Account.css";
 import { NavLink, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import InputMain from "../../Base/InputMain";
+import ButtonTransparent from "../../Base/ButtonTransparent";
 
 const Account = (props) => {
   const [activeLink, setActiveLink] = useState(false);
@@ -25,8 +26,20 @@ const Account = (props) => {
   const activeLinkTrue = () => {
     setActiveLink(true);
   };
-  const inputOnChange = (event) => {
+  const inputLastNameOnChange = (event) => {
     setLastName(event.target.value);
+  };
+  const inputFirstNameOnChange = (event) => {
+    setFirstName(event.target.value);
+  };
+  const inputEmailOnChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const inputDateOnChange = (event) => {
+    setDate(event.target.value);
+  };
+  const inputPhoneOnChange = (event) => {
+    setPhone(event.target.value);
   };
 
   return (
@@ -39,7 +52,14 @@ const Account = (props) => {
               <li className="account-left__item">
                 <div className="account-left__item-title">Tài khoản</div>
                 <div onClick={activeLinkFalse}>
-                  <NavLink to="" className="account-left__item-link">
+                  <NavLink
+                    to=""
+                    className={({ isActive }) =>
+                      isActive
+                        ? "account-left__item-link account-left__item-link--active"
+                        : "account-left__item-link"
+                    }
+                  >
                     Thông tin tài khoản
                   </NavLink>
                 </div>
@@ -47,7 +67,14 @@ const Account = (props) => {
               <li className="account-left__item">
                 <div className="account-left__item-title">Sổ địa chỉ</div>
                 <div onClick={activeLinkTrue}>
-                  <NavLink to="customerinfo" className="account-left__item-link">
+                  <NavLink
+                    to="address"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "account-left__item-link account-left__item-link--active"
+                        : "account-left__item-link"
+                    }
+                  >
                     Địa chỉ giao hàng
                   </NavLink>
                 </div>
@@ -55,7 +82,14 @@ const Account = (props) => {
               <li className="account-left__item">
                 <div className="account-left__item-title">Đơn hàng</div>
                 <div onClick={activeLinkTrue}>
-                  <NavLink to="" className="account-left__item-link">
+                  <NavLink
+                    to="accountPurchaseHistory"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "account-left__item-link account-left__item-link--active"
+                        : "account-left__item-link"
+                    }
+                  >
                     Lịch sử mua hàng
                   </NavLink>
                 </div>
@@ -63,14 +97,28 @@ const Account = (props) => {
               <li className="account-left__item">
                 <div className="account-left__item-title">Wishlist</div>
                 <div onClick={activeLinkTrue}>
-                  <NavLink to="" className="account-left__item-link">
+                  <NavLink
+                    to="accountFavoriteList"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "account-left__item-link account-left__item-link--active"
+                        : "account-left__item-link"
+                    }
+                  >
                     Danh sách yêu thích
                   </NavLink>
                 </div>
               </li>
               <li className="account-left__item">
                 <div>
-                  <NavLink to="" className="account-left__item-link">
+                  <NavLink
+                    to=""
+                    className={({ isActive }) =>
+                      isActive
+                        ? "account-left__item-link account-left__item-link--active"
+                        : "account-left__item-link"
+                    }
+                  >
                     Đăng xuất tài khoản
                   </NavLink>
                 </div>
@@ -80,27 +128,54 @@ const Account = (props) => {
           <div className="col l-9">
             {!activeLink && (
               <div className="info-wrap">
-                <div className="info__title">Thông tin tài khoản</div>
+                <div className="account-left__item-title">Thông tin tài khoản</div>
                 <InputMain
                   type="text"
                   placeholder="Họ"
-                  onChange={inputOnChange}
+                  onChange={inputLastNameOnChange}
                   value={lastName}
                 />
                 <InputMain
                   type="text"
                   placeholder="Tên"
-                  onChange={inputOnChange}
+                  onChange={inputFirstNameOnChange}
                   value={firstName}
                 />
                 <InputMain
                   type="text"
                   placeholder="Email"
-                  onChange={inputOnChange}
+                  onChange={inputEmailOnChange}
                   value={email}
                 />
-                <InputMain type="date" onChange={inputOnChange} value={date} />
-                <InputMain type="text" onChange={inputOnChange} value={phone} />
+                <InputMain type="date" onChange={inputDateOnChange} value={date} />
+                <InputMain
+                  type="text"
+                  onChange={inputPhoneOnChange}
+                  placeholder="Số điên thoại"
+                  value={phone}
+                />
+                <div className="account-left__wrap-gender">
+                  <input
+                    id="account-left__registerRadio1"
+                    type="radio"
+                    name="gender"
+                    defaultChecked
+                  />
+                  <label
+                    htmlFor="account-left__registerRadio1"
+                    className="account-left__Radio-label"
+                  >
+                    Nam
+                  </label>
+                  <input id="account-left__registerRadio2" type="radio" name="gender" />
+                  <label
+                    htmlFor="account-left__registerRadio2"
+                    className="account-left__Radio-label"
+                  >
+                    Nữ
+                  </label>
+                </div>
+                <ButtonTransparent>Cập nhật thông tin</ButtonTransparent>
               </div>
             )}
             <Outlet />

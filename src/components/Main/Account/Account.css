@@ -9,7 +9,7 @@
   color: var(--text-color);
   letter-spacing: 1px;
   font-weight: 300;
-  margin-bottom: 15px;
+  margin-bottom: 38px;
   text-align: center;
 }
 .account-left__list {
@@ -35,4 +35,38 @@
   font-size: 1.5rem;
   line-height: 2.1rem;
   color: var(--text-color);
+}
+.account-left__item-link--active,
+.account-left__item-link:hover {
+  color: #96614f;
+}
+.account-left__wrap-gender {
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+}
+#account-left__registerRadio1,
+#account-left__registerRadio2 {
+  margin: 0 8px;
+}
+.account-left__Radio-label {
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+}
+.account-left__submit-btn {
+  text-decoration: underline;
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+  font-weight: 600;
+  letter-spacing: 0px;
+  color: #96614f;
+  text-transform: capitalize;
+  padding: 0;
+  display: block;
+  margin: auto;
+  margin-bottom: 15px;
+  margin-top: 30px;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
 }

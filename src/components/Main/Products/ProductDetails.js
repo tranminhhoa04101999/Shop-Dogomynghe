@@ -1,65 +1,141 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
-import { faFeatherAlt } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import "./ProductDetails.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
+import { faFeatherAlt } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import './ProductDetails.css';
+import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
 
 const LIST_IMG = [
   {
     id: 1,
-    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg",
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg',
   },
   {
     id: 2,
-    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg",
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg',
   },
   {
     id: 3,
-    link: "https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg",
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
+  },
+  {
+    id: 43,
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
+  },
+  {
+    id: 34,
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
+  },
+  {
+    id: 53,
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
+  },
+  {
+    id: 35,
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
+  },
+  {
+    id: 36,
+    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
   },
 ];
 
 const ProductDetails = (props) => {
-  const [imgMain, setImgMain] = useState("");
+  const [imgProduct, setImgProduct] = useState([]);
+  const [imgMain, setImgMain] = useState();
+  const [quantityAddCart, setQuantityAddCart] = useState(1);
+  const [dataProduct, setDataProduct] = useState({
+    idProduct: 0,
+    nameProduct: '',
+    price: 0,
+    color: '',
+    descProduct: '',
+    quantity: 0,
+    addDate: '2022-02-18T17:00:00.000+00:00',
+    isActive: 1,
+    discount: {
+      idDiscount: 0,
+      nameDiscount: '',
+      descDiscount: '',
+      percent: 1,
+      dateCreate: '2022-02-15',
+      dateModified: null,
+      isActive: 1,
+    },
+  });
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'VND',
+  });
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    // set hinh mac dinh cho imgImain
-    setImgMain(LIST_IMG[0].link);
+    if (state === null) {
+      navigate('/product');
+    } else {
+      window.scrollTo(0, 0);
+      // set hinh mac dinh cho imgImain
+      fetch(`${LINKCONNECT_BASE}/imgproductwith?idProduct=${state.idProduct}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setImgProduct(data);
+          setImgMain(`${LINKIMG_BASE}${data[0].imgURL}.jpg?alt=media`);
+        });
+      //lấy thông tin product
+      fetch(`${LINKCONNECT_BASE}/getproductbyid?idProduct=${state.idProduct}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setDataProduct(data);
+        });
+    }
   }, []);
 
   const imgSmallClick = (event) => {
     setImgMain(event.target.src);
+  };
+  const subQuantityAddHandler = (props) => {
+    if (quantityAddCart === 1) {
+      return;
+    }
+    setQuantityAddCart((prevData) => prevData - 1);
+  };
+  const addQuantityAddHandler = (props) => {
+    setQuantityAddCart((prevData) => prevData + 1);
   };
 
   return (
     <div className="grid wide">
       <div className="container-product-details">
         <div className="breadcrums">
-          <a href="/" className="breadcrums-link">
+          <NavLink to="/" className="breadcrums-link">
             Trang Chủ
-          </a>
+          </NavLink>
           <span className="breadcrums-gach">/</span>
-          <a href="/" className="breadcrums-link">
+          <NavLink to="/product" className="breadcrums-link">
             Sản Phẩm
-          </a>
+          </NavLink>
           <span className="breadcrums-gach">/</span>
 
-          <a href="/" className="breadcrums-link">
+          <NavLink to="/productDetails" className="breadcrums-link">
             Chi tiết sản phẩm
-          </a>
+          </NavLink>
         </div>
         <div className="row">
           <div className="col l-2">
             <div className="P-details__list-img">
-              {LIST_IMG.map((item) => (
+              {imgProduct.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.idImgProduct}
                   className="P-details__list-img-link"
                   onClick={imgSmallClick}
                 >
-                  <img src={item.link} alt="" className="P-details__list-img-small" />
+                  <img
+                    src={`${LINKIMG_BASE}${item.imgURL}.jpg?alt=media`}
+                    alt=""
+                    className="P-details__list-img-small"
+                  />
                 </div>
               ))}
             </div>
@@ -71,68 +147,38 @@ const ProductDetails = (props) => {
           </div>
           <div className="col l-5 ">
             <div className="P-details-right">
-              <h1 className="P-details-right__title">Quần Short Trừu Tượng</h1>
+              <h1 className="P-details-right__title">{dataProduct.nameProduct}</h1>
               <div className="P-details-right__quantity-SKU">
-                <span className="P-details-right__sku">SKU: M2STH3041007</span>
+                <span className="P-details-right__sku">
+                  Mã Sản Phẩm: {dataProduct.idProduct}
+                </span>
                 <span className="P-details-right__quantity">
-                  Hiện tại còn 31 sản phẩm.
+                  Hiện tại còn {dataProduct.quantity} sản phẩm.
                 </span>
               </div>
               <div className="P-details-right__price">
-                <span className="P-details-right__price-current">362,950₫</span>
-                <span className="P-details-right__price-old">595,000₫</span>
+                <span className="P-details-right__price-current">
+                  {dataProduct.discount !== null
+                    ? formatter.format(dataProduct.price * dataProduct.discount.percent)
+                    : formatter.format(dataProduct.price)}
+                </span>
+                {dataProduct.discount !== null ? (
+                  <span className="P-details-right__price-old">
+                    {formatter.format(dataProduct.price)}
+                  </span>
+                ) : (
+                  ''
+                )}
               </div>
               <div className="P-details-right__select-swatches">
-                <span className="P-details-right__color-title">Màu sắc:</span>
+                <span className="P-details-right__color-title">
+                  Màu sắc: {dataProduct.color}
+                </span>
 
                 <div className="P-details-right__color">
-                  <div className="P-details-right__wrapper-img">
-                    <a
-                      href="/"
-                      className="P-details-right__color-item P-details-right__color-item--active"
-                    >
-                      <img
-                        src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg"
-                        alt=""
-                        className="P-details-right__color-item--img"
-                      />
-                      <img
-                        src="https://totoshop.vn/tp/T0235/img/bg-product.png"
-                        alt=""
-                        className="P-details-right__color-item--active-tich"
-                      />
-                    </a>
-                    <a href="/" className="P-details-right__color-item">
-                      <img
-                        src="https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg"
-                        alt=""
-                        className="P-details-right__color-item--img"
-                      />
-                      <img
-                        src="https://totoshop.vn/tp/T0235/img/bg-product.png"
-                        alt=""
-                        className="P-details-right__color-item--active-tich"
-                      />
-                    </a>
-                  </div>
-                  <span className="P-details-right__color-title">Kích Thước:</span>
+                  <span className="P-details-right__color-title">Mô tả: </span>
                   <div className="P-details-right__list-size">
-                    <div className="P-details-right__item-size P-details-right__item-size--active">
-                      <span>L</span>
-                      <img
-                        src="https://totoshop.vn/tp/T0235/img/bg-product.png"
-                        alt=""
-                        className="P-details-right__item-size--active-tich"
-                      />
-                    </div>
-                    <div className="P-details-right__item-size">
-                      <span>XL</span>
-                      <img
-                        src="https://totoshop.vn/tp/T0235/img/bg-product.png"
-                        alt=""
-                        className="P-details-right__item-size--active-tich"
-                      />
-                    </div>
+                    {dataProduct.descProduct}
                   </div>
                 </div>
               </div>
@@ -141,12 +187,16 @@ const ProductDetails = (props) => {
                   type="button"
                   className="P-details-right__quantity-area-btn"
                   value="-"
+                  onClick={subQuantityAddHandler}
                 />
-                <span className="P-details-right__quantity-area-num">1</span>
+                <span className="P-details-right__quantity-area-num">
+                  {quantityAddCart}
+                </span>
                 <input
                   type="button"
                   className="P-details-right__quantity-area-btn"
                   value="+"
+                  onClick={addQuantityAddHandler}
                 />
               </div>
               <div className="P-details-right__wrap-addcart">
@@ -154,10 +204,17 @@ const ProductDetails = (props) => {
                 <button className="P-details-right__addcart">Mua Ngay</button>
               </div>
               <div className="P-details-right__wrap-description">
-                <p className="P-details-right__des-title">Miêu tả sản phẩm</p>
+                <p className="P-details-right__des-title">Thông tin bảo hành: </p>
                 <p className="P-details-right__des-text">
-                  - Vải Kate in hoa thoáng mát, Phù hợp đi làm, đi dạo phố.
+                  Sản phẩm bằng gỗ công nghiệp MDF/MFC: 2 năm
                 </p>
+                <p className="P-details-right__des-text">
+                  Sản phẩm bằng gỗ tự nhiên: 5 năm
+                </p>
+                <p className="P-details-right__des-text">
+                  Sản phẩm bằng gỗ cao cấp: 10 năm
+                </p>
+                <p className="P-details-right__des-text">khung gỗ: 05 năm.</p>
               </div>
             </div>
           </div>

@@ -1,8 +1,8 @@
-import Slider from "react-slick";
-import { NavLink } from "react-router-dom";
-import "./BannerSlider.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Slider from 'react-slick';
+import { NavLink } from 'react-router-dom';
+import './BannerSlider.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const BannerSlider = (props) => {
   function PrevArrow(props) {
@@ -38,7 +38,7 @@ const BannerSlider = (props) => {
           <div className="slider-item">
             <NavLink to="/">
               <img
-                src="https://theme.hstatic.net/1000197303/1000796534/14/image_slider-1.jpg?v=444"
+                src="https://firebasestorage.googleapis.com/v0/b/image-kddgmn-52ebf.appspot.com/o/images%2Fslider1.jpg?alt=media"
                 alt="slider1"
                 className="slider-item__img"
               />
@@ -47,7 +47,7 @@ const BannerSlider = (props) => {
           <div className="slider-item">
             <NavLink to="/">
               <img
-                src="https://theme.hstatic.net/1000197303/1000796534/14/image_slider-2.jpg?v=444"
+                src="https://firebasestorage.googleapis.com/v0/b/image-kddgmn-52ebf.appspot.com/o/images%2Fslider2.jpg?alt=media"
                 alt="slider2"
                 className="slider-item__img"
               />
@@ -56,7 +56,7 @@ const BannerSlider = (props) => {
           <div className="slider-item">
             <NavLink to="/">
               <img
-                src="https://theme.hstatic.net/1000197303/1000796534/14/image_slider-4.jpg?v=444"
+                src="https://firebasestorage.googleapis.com/v0/b/image-kddgmn-52ebf.appspot.com/o/images%2Fslider3.jpg?alt=media"
                 alt="slider3"
                 className="slider-item__img"
               />

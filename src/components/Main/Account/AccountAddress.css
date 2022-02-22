@@ -1,0 +1,46 @@
+.account-address-wrap {
+  width: 100%;
+}
+.account-address__title {
+  font-size: 2rem;
+  line-height: 3rem;
+  letter-spacing: 0.4px;
+  margin-bottom: 12px;
+  font-weight: 300;
+}
+.account-address__label {
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+  margin-bottom: 15px;
+}
+.account-address__content {
+  display: flex;
+  margin-bottom: 15px;
+}
+.account-address__content > div {
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-right: 20px;
+}
+
+.account-address__content-icon {
+  margin-right: 6px;
+}
+.account-address__btn {
+  width: 30px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+.account-address__btn-modify {
+  margin: 0 10px 0 0;
+}
+.account-address__btn-remove {
+  display: block;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}

@@ -1,12 +1,12 @@
-import { NavLink } from "react-router-dom";
-import "./Categories.css";
+import { NavLink } from 'react-router-dom';
+import './Categories.css';
 
 const Categories = (props) => {
   return (
     <div className="grid wide">
       <div className="categories">
         <span className="categories-title">Danh Mục Sản Phẩm</span>
-        <NavLink to="/" className="categories-link">
+        <NavLink to="/product" className="categories-link">
           Xem Tất Cả Sản Phẩm
         </NavLink>
         <div className="row sm-gutter">

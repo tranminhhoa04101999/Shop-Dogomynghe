@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #242526;
+  --primary-color: #823905;
   --primary-color-red: #ee4266;
   --white-color: #fff;
   --white-color-header: #e4e6eb;
@@ -17,7 +17,7 @@
 * {
   box-sizing: border-box;
   line-height: 1.6rem;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 10px;
 }
 html {

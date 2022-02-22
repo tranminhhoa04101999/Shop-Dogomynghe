@@ -45,7 +45,7 @@ const Register = (props) => {
                 className="register-main__input"
                 placeholder="Mật khẩu* (tối thiểu 5 ký tự)"
               />
-              <button className="register-main__submit-btn">Đăng K</button>
+              <button className="register-main__submit-btn">Đăng Ký</button>
               <div className="register-main__login-link-wrap">
                 <NavLink to="/login" className="register-main__login-link">
                   Đăng Nhập
