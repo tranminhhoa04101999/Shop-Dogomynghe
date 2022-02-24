@@ -1,17 +1,36 @@
-import "./SliderSaleProdut.css";
-import Slider from "react-slick";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink } from "react-router-dom";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import './SliderSaleProdut.css';
+import Slider from 'react-slick';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavLink } from 'react-router-dom';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
+
+const INITIAL_PRODDISCOUNT = {
+  idProduct: 0,
+  nameProduct: '',
+  price: 0,
+  color: '',
+  descProduct: '',
+  quantity: 0,
+  addDate: '',
+  isActive: 1,
+  discount: {},
+  category: {},
+};
 
 const SliderSaleProdut = (props) => {
+  const [dataProdDiscount, setDataProdDiscount] = useState([]);
+  const { dataImage } = props;
+
   //#region custom arrow slider
   function PrevArrow(props) {
     const { className, style, onClick } = props;
     return (
       <div
         className={className}
-        style={{ ...style, top: "40%", left: "-20px", display: "flex" }}
+        style={{ ...style, top: '40%', left: '-20px', display: 'flex' }}
         onClick={onClick}
       >
         <FontAwesomeIcon icon={faArrowLeft} className="slider-slick-icon" />
@@ -23,7 +42,7 @@ const SliderSaleProdut = (props) => {
     return (
       <div
         className={className}
-        style={{ ...style, top: "40%", right: "-2px", display: "flex" }}
+        style={{ ...style, top: '40%', right: '-2px', display: 'flex' }}
         onClick={onClick}
       >
         <FontAwesomeIcon icon={faArrowRight} className="slider-slick-icon" />
@@ -41,6 +60,26 @@ const SliderSaleProdut = (props) => {
   };
   //#endregion
 
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  const getImageProductHandler = (props) => {
+    var imgURL = 'defaultImage';
+    dataImage.map((item) => {
+      if (item.idProduct === props.idProduct) {
+        imgURL = item.imgURL;
+      }
+    });
+    return imgURL;
+  };
+  useEffect(() => {
+    // lấy sản phẩm có discount
+    fetch(`${LINKCONNECT_BASE}/findByHaveDiscount`)
+      .then((response) => response.json())
+      .then((data) => setDataProdDiscount(data));
+  }, []);
+
   return (
     <div className="grid wide">
       <div className="product-sale">
@@ -49,81 +88,43 @@ const SliderSaleProdut = (props) => {
           Xem Các Sản Phẩm Giảm Giá
         </NavLink>
         <Slider {...settings}>
-          <div className="product-sale-col">
-            <div className="product-sale-wrapper-img">
-              <img
-                src="https://cdn2.yame.vn/pimg/ao-thun-sweater-linh-vat-tigeer-ver1-0020579/c7aaf91b-0a33-8d00-c8b7-0018ac703c4a.jpg?w=540&h=756&c=true"
-                alt=""
-                className="product-sale-item__img"
-              />
-              <span className="product-sale-item__sale-percent">-30%</span>
-            </div>
-            <span className="product-sale-item__title">
-              Áo Thun Sweater Linh Vật Tigeer
-            </span>
-            <span className="product-sale-item__price">125.000đ</span>
-            <span className="product-sale-item__price-sale">125.000đ</span>
-          </div>
-          <div className="product-sale-col">
-            <div className="product-sale-wrapper-img">
-              <img
-                src="https://cdn2.yame.vn/pimg/so-mi-tay-ngan-than-co-ai-anubis-ver2-0020430/bf1238ff-3dc5-d900-9f7e-0018ac6613c1.jpg?w=540&h=756&c=true"
-                alt=""
-                className="product-sale-item__img"
-              />
-              <span className="product-sale-item__sale-percent">-32%</span>
-            </div>
-            <span className="product-sale-item__title">
-              Sơ Mi Tay Ngắn Thần Cổ Đại Anubis Ver2
-            </span>
-            <span className="product-sale-item__price">125.000đ</span>
-            <span className="product-sale-item__price-sale">285,000 đ</span>
-          </div>
-          <div className="product-sale-col">
-            <div className="product-sale-wrapper-img">
-              <img
-                src="https://cdn2.yame.vn/pimg/quan-dai-jean-straight-on-gian-y-nguyen-ban-ver5-0020539/3831d169-bd09-3d00-7ab5-0018ac6b84b5.jpg?w=540&h=756"
-                alt=""
-                className="product-sale-item__img"
-              />
-              <span className="product-sale-item__sale-percent">-32%</span>
-            </div>
-            <span className="product-sale-item__title">
-              Quần Dài Jean Straight Đơn Giản Y Nguyên Bản Ver5
-            </span>
-            <span className="product-sale-item__price">125.000đ</span>
-            <span className="product-sale-item__price-sale">285,000 đ</span>
-          </div>
-          <div className=" product-sale-col">
-            <div className="product-sale-wrapper-img">
-              <img
-                src="https://cdn2.yame.vn/pimg/quan-short-linh-vat-bbuff-ver4-0020515/1c36da07-ff77-0100-8d3e-0018afcab2de.jpg?w=540&h=756"
-                alt=""
-                className="product-sale-item__img"
-              />
-              <span className="product-sale-item__sale-percent">-32%</span>
-            </div>
-            <span className="product-sale-item__title">
-              Quần Short Linh Vật Bbuff Ver4
-            </span>
-            <span className="product-sale-item__price">125.000đ</span>
-            <span className="product-sale-item__price-sale">355,000 đ</span>
-          </div>
-          <div className="product-sale-col">
-            <div className="product-sale-wrapper-img">
-              <img
-                src="https://cdn2.yame.vn/pimg/ao-thun-sweater-linh-vat-tigeer-ver1-0020579/c7aaf91b-0a33-8d00-c8b7-0018ac703c4a.jpg?w=540&h=756&c=true"
-                alt=""
-                className="product-sale-item__img"
-              />
-              <span className="product-sale-item__sale-percent">-32%</span>
-            </div>
-            <span className="product-sale-item__title">
-              Áo Thun Sweater Linh Vật Tigeer
-            </span>
-            <span className="product-sale-item__price">125.000đ</span>
-            <span className="product-sale-item__price-sale">125.000đ</span>
-          </div>
+          {dataProdDiscount.map((item) => {
+            let imgName = getImageProductHandler({ idProduct: item.idProduct });
+
+            return (
+              <div key={item.idProduct} className="product-sale-col">
+                <NavLink
+                  to="/productDetails"
+                  className="products-col__wapper-content"
+                  state={{ idProduct: item.idProduct }}
+                >
+                  <div className="product-sale-wrapper-img">
+                    <img
+                      src={`${LINKIMG_BASE}${imgName}.jpg?alt=media`}
+                      alt=""
+                      className="product-sale-item__img"
+                    />
+                    <span className="product-sale-item__sale-percent">
+                      {item.discount.percent * 100} %
+                    </span>
+                  </div>
+                  <span className="product-sale-item__title">{item.nameProduct}</span>
+                  <div className="products-item__price">
+                    {item.discount !== null && (
+                      <span className="products-item__price-old">
+                        {formatter.format(item.price)}
+                      </span>
+                    )}
+                    <span className="products-item__price-current">
+                      {item.discount !== null
+                        ? formatter.format(item.price * item.discount.percent)
+                        : formatter.format(item.price)}
+                    </span>
+                  </div>
+                </NavLink>
+              </div>
+            );
+          })}
         </Slider>
       </div>
     </div>

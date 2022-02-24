@@ -10,6 +10,22 @@ const Product = () => {
   const [checkLink, setCheckLink] = useState(0);
   const [idCateClick, setIdCateClick] = useState(0);
   const [dataImage, setDataImage] = useState([]);
+  const [reload, setReload] = useState(false);
+  const [dataNewProd, setDataNewProd] = useState([
+    {
+      idProduct: 0,
+      nameProduct: '',
+      price: 0,
+      color: '',
+      descProduct: '',
+      quantity: 0,
+      addDate: '',
+      isActive: 1,
+      discount: null,
+      category: {},
+    },
+  ]);
+
   const { state } = useLocation();
   const [dataPage, setDataPage] = useState({
     content: [
@@ -26,7 +42,7 @@ const Product = () => {
       },
     ],
     page: 0,
-    size: 10,
+    size: 15,
     totalElements: 41,
     totalPages: 41,
     last: false,
@@ -42,10 +58,39 @@ const Product = () => {
   ]);
 
   useEffect(() => {
+    let link = `${LINKCONNECT_BASE}/findByNamePage?page=0&size=15&nameProduct=${state.searchText}`;
+    fetch(link)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  }, [state]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
+    // lấy sản phẩm mới thêm chưa được 1 tuần
+    fetch(`${LINKCONNECT_BASE}/findByNewOneWeek`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataNewProd(data);
+        if (data.length === 0) {
+          // nếu không có thì lấy 5 sản phẩm trong sản phẩm
+          fetch(`${LINKCONNECT_BASE}/allproduct`)
+            .then((response) => response.json())
+            .then((data) => {
+              setDataNewProd(data.slice(0, 5));
+            });
+        }
+      });
+    // lấy sản phẩm
     let link = `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}`;
     if (state !== null) {
-      link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}`;
+      if (state.idCategory !== undefined) {
+        link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}`;
+      } else if (state.searchText !== undefined) {
+        link = `${LINKCONNECT_BASE}/findByNamePage?page=${dataPage.page}&size=${dataPage.size}&nameProduct=${state.searchText}`;
+      }
     }
 
     fetch(link)
@@ -58,11 +103,6 @@ const Product = () => {
     fetch(`${LINKCONNECT_BASE}/allimghaveidprod`)
       .then((response) => response.json())
       .then((data) => setDataImage(data));
-    // fetch(`${LINKCONNECT_BASE}/imgwithidprod?idProduct=${props.idProduct}`)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('data', data);
-    //   });
     // lấy all category
     fetch(`${LINKCONNECT_BASE}/allcategory`)
       .then((response) => response.json())
@@ -126,6 +166,7 @@ const Product = () => {
         setDataPage(data);
       });
   };
+
   return (
     <div className="grid wide container-product">
       <div className="row sm-gutter wrapper-product">
@@ -164,6 +205,9 @@ const Product = () => {
             <div className="row sm-gutter">
               {dataProductDefault.map((item) => {
                 let imgName = getImageProductHandler({ idProduct: item.idProduct });
+                let checkNew = dataNewProd.findIndex(
+                  (prod) => prod.idProduct === item.idProduct
+                );
                 return (
                   <div className="col l-2-4" key={item.idProduct}>
                     <NavLink
@@ -207,10 +251,17 @@ const Product = () => {
                         <span className="home-product-item__brand">TMH</span>
                         <span className="home-product-item__origin-name">Việt Nam</span>
                       </div>
-                      <div className="home-product-item__favourite">
-                        <i className="fas fa-check"></i>
-                        <span>Yêu thích</span>
-                      </div>
+                      {checkNew >= 0 ? (
+                        <div
+                          className="home-product-item__favourite"
+                          style={{ backgroundColor: '#ff0000d9' }}
+                        >
+                          <i className="fas fa-check"></i>
+                          <span>Mới ra mắt</span>
+                        </div>
+                      ) : (
+                        ''
+                      )}
                       {item.discount !== null && (
                         <div className="home-product-item__sale-off">
                           <span className="home-product-item__sale-off-precent">

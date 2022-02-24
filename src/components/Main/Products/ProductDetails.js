@@ -6,41 +6,6 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
 
-const LIST_IMG = [
-  {
-    id: 1,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_IMG_6989.jpg',
-  },
-  {
-    id: 2,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120429_IMG_6988.jpg',
-  },
-  {
-    id: 3,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-  {
-    id: 43,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-  {
-    id: 34,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-  {
-    id: 53,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-  {
-    id: 35,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-  {
-    id: 36,
-    link: 'https://storage.googleapis.com/cdn.nhanh.vn/store/7136/ps/20210416/16042021120427_1.jpg',
-  },
-];
-
 const ProductDetails = (props) => {
   const [imgProduct, setImgProduct] = useState([]);
   const [imgMain, setImgMain] = useState();

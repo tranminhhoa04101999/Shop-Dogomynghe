@@ -1,10 +1,41 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './MainNavigation.css';
 import logo from '../../assets/img/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
+import { useState } from 'react';
+import { useEffect } from 'react';
+
+const INITIAL_CATEGORY = {
+  idCategory: 0,
+  name: '',
+  descCategory: 'null',
+  imgURL: '0',
+  isActive: 1,
+};
 
 const NavBar = (props) => {
+  const [dataCategory, setDataCategory] = useState([INITIAL_CATEGORY]);
+  const [searchText, setSearchText] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // get all category
+    fetch(`${LINKCONNECT_BASE}/allcategory`)
+      .then((response) => response.json())
+      .then((data) => setDataCategory(data));
+  }, []);
+
+  const inputSearchOnChange = (props) => {
+    setSearchText(props.value);
+  };
+
+  const searchOnClick = () => {
+    navigate('/product', { state: { searchText: searchText } });
+    setSearchText('');
+  };
+
   return (
     <header className="header">
       <div className="grid wide">
@@ -30,7 +61,7 @@ const NavBar = (props) => {
               </li>
               <li className="header-nav__item header-nav__item-show-navProduct">
                 <NavLink
-                  to="/sanpham"
+                  to="/product"
                   className={({ isActive }) =>
                     isActive
                       ? 'header-nav__item-link header-nav__item-link--active'
@@ -45,9 +76,9 @@ const NavBar = (props) => {
                     <div className="row sm-gutter header-product__row-add">
                       <div className="col l-3">
                         <div className="header-product__item">
-                          <NavLink to="#">
+                          <NavLink to="/product">
                             <img
-                              src="https://theme.hstatic.net/1000197303/1000796534/14/mega-image_1-1.jpg?v=444"
+                              src={`${LINKIMG_BASE}imghover.jpg?alt=media`}
                               className="header-product__item-img"
                               alt="mua ngay"
                             />
@@ -56,9 +87,9 @@ const NavBar = (props) => {
                       </div>
                       <div className="col l-3">
                         <div className="header-product__item">
-                          <NavLink to="#">
+                          <NavLink to="/product">
                             <img
-                              src="https://theme.hstatic.net/1000197303/1000796534/14/mega-image_1-2.jpg?v=444"
+                              src={`${LINKIMG_BASE}imghover1.jpg?alt=media`}
                               className="header-product__item-img"
                               alt="mua ngay"
                             />
@@ -84,76 +115,37 @@ const NavBar = (props) => {
                       </div>
                       <div className="col l-2 border-right-left">
                         <div className="header-product__item-text">
-                          <span className="header-product__item-text-title">Áo</span>
+                          <span className="header-product__item-text-title">
+                            Đồ gỗ mỹ nghệ
+                          </span>
                           <ul className="header-product__item-text-list">
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                GU Unisex GENZ
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Áo Thun
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Áo Khoác
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Áo Sơ Mi
-                              </NavLink>
-                            </li>
+                            {dataCategory.map((item) => (
+                              <li
+                                key={item.idCategory}
+                                className="header-product__item-text-item"
+                              >
+                                <NavLink
+                                  to="/product"
+                                  className="header-product__item-text-link"
+                                  state={{ idCategory: item.idCategory }}
+                                >
+                                  {item.name}
+                                </NavLink>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                       </div>
                       <div className="col l-2">
                         <div className="header-product__item-text">
-                          <span className="header-product__item-text-title">
-                            Quần, Phụ Kiện
-                          </span>
-                          <ul className="header-product__item-text-list">
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Quần Jean
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Quần Dài
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Balo, Túi
-                              </NavLink>
-                            </li>
-                            <li className="header-product__item-text-item">
-                              <NavLink to="#" className="header-product__item-text-link">
-                                Nón
-                              </NavLink>
-                            </li>
-                          </ul>
+                          <span className="header-product__item-text-title"></span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </li>
-              <li className="header-nav__item">
-                <NavLink
-                  to="/tintuc"
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'header-nav__item-link header-nav__item-link--active'
-                      : 'header-nav__item-link'
-                  }
-                >
-                  Tin tức
-                </NavLink>
-              </li>
+
               <li className="header-nav__item">
                 <NavLink
                   to="/gioithieu"
@@ -175,8 +167,17 @@ const NavBar = (props) => {
           </div>
           <div className="header-right">
             <div className="header-right__search">
-              <input className="header-right__search-input"></input>
-              <button className="header-right__search-btn">
+              <input
+                id="header-right__search-inputId"
+                className="header-right__search-input"
+                placeholder="Nhập tên sản phẩm"
+                onChange={(event) => inputSearchOnChange({ value: event.target.value })}
+                value={searchText}
+              ></input>
+              <button
+                className="header-right__search-btn"
+                onClick={() => searchOnClick()}
+              >
                 <FontAwesomeIcon
                   icon={faSearch}
                   className="header-right__search-btn-icon"

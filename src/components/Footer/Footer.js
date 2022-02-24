@@ -1,14 +1,14 @@
-import "./footer.css";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { faFacebook, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import './footer.css';
+import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = (props) => {
   return (
     <div className="grid wide">
       <div className="footer">
-        <span className="footer-top-title">TMH Shop</span>
+        <span className="footer-top-title">CÔNG TY TNHH ĐỒ GỖ MỸ NGHỆ TMH</span>
         <div className="row">
           <div className="col l-2">
             <span className="footer-title">Về chúng tôi</span>
@@ -20,7 +20,7 @@ const Footer = (props) => {
               </li>
               <li className="footer-item">
                 <NavLink to="/" className="footer-link">
-                  Cảm hứng thời trang
+                  Cảm hứng điêu khắc
                 </NavLink>
               </li>
               <li className="footer-item">
@@ -91,8 +91,8 @@ const Footer = (props) => {
           <div className="col l-4">
             <p className="footer-title">Đăng kí nhận tin khuyến mãi</p>
             <p className="footer-mail-description">
-              Hãy nhập email của bạn vào đây để nhận được xu hướng thời trang và khuyến
-              mãi mới nhất từ TMH nhé.
+              Hãy nhập email của bạn vào đây để nhận được sản phẩm mới và khuyến mãi mới
+              nhất từ TMH nhé.
             </p>
             <div className="footer-wrapper-input">
               <input
