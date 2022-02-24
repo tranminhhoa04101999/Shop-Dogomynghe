@@ -84,7 +84,7 @@ const SliderSaleProdut = (props) => {
     <div className="grid wide">
       <div className="product-sale">
         <span className="product-sale-title">Sản Phẩm Giảm Giá</span>
-        <NavLink to="/" className="product-sale-link">
+        <NavLink to="/product" className="product-sale-link" state={{ isSale: 1 }}>
           Xem Các Sản Phẩm Giảm Giá
         </NavLink>
         <Slider {...settings}>

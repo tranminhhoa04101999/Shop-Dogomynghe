@@ -99,8 +99,8 @@ const SliderNewProduct = (props) => {
     <div className="grid wide">
       <div className="products">
         <span className="products-title">Sản Phẩm Mới</span>
-        <NavLink to="/product" className="products-link">
-          Xem Tất Cả Sản Phẩm
+        <NavLink to="/product" className="products-link" state={{ isNew: 1 }}>
+          Xem Tất Cả Sản Phẩm Mới
         </NavLink>
         <Slider {...settings}>
           {dataNewProd.map((item) => {

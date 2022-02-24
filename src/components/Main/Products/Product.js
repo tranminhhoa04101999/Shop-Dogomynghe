@@ -9,8 +9,10 @@ const Product = () => {
   const [dataProductDefault, setDataProductDefault] = useState([]);
   const [checkLink, setCheckLink] = useState(0);
   const [idCateClick, setIdCateClick] = useState(0);
+  const [onChangePageSearchText, setOnChangePageSearchText] = useState(0);
+  const [onChangePageSale, setOnChangePageSale] = useState(0);
   const [dataImage, setDataImage] = useState([]);
-  const [reload, setReload] = useState(false);
+  const [onChangePageNew, setOnChangePageNew] = useState(0);
   const [dataNewProd, setDataNewProd] = useState([
     {
       idProduct: 0,
@@ -58,13 +60,15 @@ const Product = () => {
   ]);
 
   useEffect(() => {
-    let link = `${LINKCONNECT_BASE}/findByNamePage?page=0&size=15&nameProduct=${state.searchText}`;
-    fetch(link)
-      .then((response) => response.json())
-      .then((data) => {
-        setDataProductDefault(data.content);
-        setDataPage(data);
-      });
+    if (state !== null) {
+      let link = `${LINKCONNECT_BASE}/findByNamePage?page=0&size=${dataPage.size}&nameProduct=${state.searchText}`;
+      fetch(link)
+        .then((response) => response.json())
+        .then((data) => {
+          setDataProductDefault(data.content);
+          setDataPage(data);
+        });
+    }
   }, [state]);
 
   useEffect(() => {
@@ -87,9 +91,32 @@ const Product = () => {
     let link = `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}`;
     if (state !== null) {
       if (state.idCategory !== undefined) {
+        setOnChangePageNew(0);
+        setOnChangePageSearchText(0);
+        setOnChangePageSale(0);
+        setCheckLink(1);
+        setIdCateClick(state.idCategory);
         link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}`;
       } else if (state.searchText !== undefined) {
+        setOnChangePageSearchText(1);
+        setOnChangePageNew(0);
+        setOnChangePageSale(0);
+
+        setCheckLink(0);
         link = `${LINKCONNECT_BASE}/findByNamePage?page=${dataPage.page}&size=${dataPage.size}&nameProduct=${state.searchText}`;
+      } else if (state.isNew !== undefined) {
+        link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=${dataPage.page}&size=${dataPage.size}`;
+        setCheckLink(0);
+        setOnChangePageSearchText(0);
+        setOnChangePageSale(0);
+
+        setOnChangePageNew(1);
+      } else if (state.isSale !== undefined) {
+        link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=${dataPage.page}&size=${dataPage.size}`;
+        setCheckLink(0);
+        setOnChangePageSearchText(0);
+        setOnChangePageNew(0);
+        setOnChangePageSale(1);
       }
     }
 
@@ -124,7 +151,6 @@ const Product = () => {
     currency: 'VND',
   });
   const onChangePage = (pageNumber) => {
-    console.log('pagenumbẻ', pageNumber);
     let link = `${LINKCONNECT_BASE}/allProductPage?page=${pageNumber - 1}&size=${
       dataPage.size
     }`;
@@ -132,6 +158,18 @@ const Product = () => {
       link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${pageNumber - 1}&size=${
         dataPage.size
       }&idCategory=${idCateClick}`;
+    } else if (onChangePageNew === 1) {
+      link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=${pageNumber - 1}&size=${
+        dataPage.size
+      }`;
+    } else if (onChangePageSearchText === 1) {
+      link = `${LINKCONNECT_BASE}/findByNamePage?page=${pageNumber - 1}&size=${
+        dataPage.size
+      }&nameProduct=${state.searchText}`;
+    } else if (onChangePageSale === 1) {
+      link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=${pageNumber - 1}&size=${
+        dataPage.size
+      }`;
     }
 
     fetch(link)
@@ -142,9 +180,23 @@ const Product = () => {
       });
   };
 
+  const allProductCategoryHandler = () => {
+    setCheckLink(0);
+    setIdCateClick(0);
+    setOnChangePageNew(0);
+    setOnChangePageSale(0);
+    fetch(`${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  };
   const categoryOnClickHandler = (props) => {
     setIdCateClick(props.idCategory);
     setCheckLink(1);
+    setOnChangePageNew(0);
+    setOnChangePageSale(0);
     window.scrollTo(0, 0);
 
     fetch(
@@ -156,10 +208,22 @@ const Product = () => {
         setDataPage(data);
       });
   };
-  const allProductCategoryHandler = () => {
+  const newProdHandler = () => {
     setCheckLink(0);
-    setIdCateClick(0);
-    fetch(`${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}`)
+    setOnChangePageSale(0);
+    setOnChangePageNew(1);
+    fetch(`${LINKCONNECT_BASE}/findByNewOneWeekPage?page=0&size=${dataPage.size}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  };
+  const saleProdHandler = () => {
+    setCheckLink(0);
+    setOnChangePageNew(0);
+    setOnChangePageSale(1);
+    fetch(`${LINKCONNECT_BASE}/findByHaveDiscountPage?page=0&size=${dataPage.size}`)
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
@@ -174,7 +238,7 @@ const Product = () => {
           <nav className="category-product">
             <h3 className="category__heading">
               <i className="category__heading-icon fas fa-list-ul"></i>
-              Danh mục
+              Danh mục sản phẩm
             </h3>
             <ul className="category-list">
               <li className="category-item category-item--active">
@@ -185,6 +249,22 @@ const Product = () => {
                   Tất cả
                 </div>
               </li>
+              <li className="category-item category-item--active">
+                <div className="category-item__link" onClick={() => newProdHandler()}>
+                  Mới ra
+                </div>
+              </li>
+              <li className="category-item category-item--active">
+                <div className="category-item__link" onClick={() => saleProdHandler()}>
+                  Giảm giá
+                </div>
+              </li>
+            </ul>
+            <h3 className="category__heading">
+              <i className="category__heading-icon fas fa-list-ul"></i>
+              Loại sản phẩm
+            </h3>
+            <ul className="category-list">
               {dataCategory.map((item) => (
                 <li key={item.idCategory} className="category-item category-item--active">
                   <div
