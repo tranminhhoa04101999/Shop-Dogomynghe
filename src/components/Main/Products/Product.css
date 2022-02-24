@@ -49,6 +49,7 @@
   display: block;
   right: 0;
   transition: right linear 0.1s;
+  cursor: pointer;
 }
 .category-item__link:hover {
   right: -4px;

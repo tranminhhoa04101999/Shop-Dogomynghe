@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './Product.css';
 import { useEffect, useState } from 'react';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
@@ -7,7 +7,10 @@ import { Pagination } from 'antd';
 
 const Product = () => {
   const [dataProductDefault, setDataProductDefault] = useState([]);
+  const [checkLink, setCheckLink] = useState(0);
+  const [idCateClick, setIdCateClick] = useState(0);
   const [dataImage, setDataImage] = useState([]);
+  const { state } = useLocation();
   const [dataPage, setDataPage] = useState({
     content: [
       {
@@ -23,18 +26,29 @@ const Product = () => {
       },
     ],
     page: 0,
-    size: 15,
+    size: 10,
     totalElements: 41,
     totalPages: 41,
     last: false,
   });
+  const [dataCategory, setDataCategory] = useState([
+    {
+      idCategory: 0,
+      name: '',
+      descCategory: '',
+      imgURL: '',
+      isActive: 1,
+    },
+  ]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    let link = `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}`;
+    if (state !== null) {
+      link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}`;
+    }
 
-    fetch(
-      `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}`
-    )
+    fetch(link)
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
@@ -49,6 +63,10 @@ const Product = () => {
     //   .then((data) => {
     //     console.log('data', data);
     //   });
+    // lấy all category
+    fetch(`${LINKCONNECT_BASE}/allcategory`)
+      .then((response) => response.json())
+      .then((data) => setDataCategory(data));
   }, []);
 
   const getImageProductHandler = (props) => {
@@ -66,9 +84,42 @@ const Product = () => {
     currency: 'VND',
   });
   const onChangePage = (pageNumber) => {
+    console.log('pagenumbẻ', pageNumber);
+    let link = `${LINKCONNECT_BASE}/allProductPage?page=${pageNumber - 1}&size=${
+      dataPage.size
+    }`;
+    if (checkLink === 1) {
+      link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${pageNumber - 1}&size=${
+        dataPage.size
+      }&idCategory=${idCateClick}`;
+    }
+
+    fetch(link)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  };
+
+  const categoryOnClickHandler = (props) => {
+    setIdCateClick(props.idCategory);
+    setCheckLink(1);
+    window.scrollTo(0, 0);
+
     fetch(
-      `${LINKCONNECT_BASE}/allProductPage?page=${pageNumber - 1}&size=${dataPage.size}`
+      `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=0&size=${dataPage.size}&idCategory=${props.idCategory}`
     )
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  };
+  const allProductCategoryHandler = () => {
+    setCheckLink(0);
+    setIdCateClick(0);
+    fetch(`${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}`)
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
@@ -86,20 +137,25 @@ const Product = () => {
             </h3>
             <ul className="category-list">
               <li className="category-item category-item--active">
-                <NavLink to="/" className="category-item__link">
-                  Trang điểm mặt
-                </NavLink>
+                <div
+                  className="category-item__link"
+                  onClick={() => allProductCategoryHandler()}
+                >
+                  Tất cả
+                </div>
               </li>
-              <li className="category-item category-item--active">
-                <NavLink to="/" className="category-item__link">
-                  Trang điểm mặt
-                </NavLink>
-              </li>
-              <li className="category-item category-item--active">
-                <NavLink to="/" className="category-item__link">
-                  Trang điểm mặt
-                </NavLink>
-              </li>
+              {dataCategory.map((item) => (
+                <li key={item.idCategory} className="category-item category-item--active">
+                  <div
+                    className="category-item__link"
+                    onClick={() =>
+                      categoryOnClickHandler({ idCategory: item.idCategory })
+                    }
+                  >
+                    {item.name}
+                  </div>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
