@@ -1,4 +1,4 @@
-import "./InputMain.css";
+import './InputMain.css';
 
 const InputMain = (props) => {
   return (
@@ -9,6 +9,7 @@ const InputMain = (props) => {
       placeholder={props.placeholder}
       value={props.value}
       onChange={props.onChange}
+      disabled={props.disabled}
     />
   );
 };

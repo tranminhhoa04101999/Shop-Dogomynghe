@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { notification, Select } from 'antd';
+import { LINKCONNECT_BASE } from '../../App';
 
 import './Register.css';
 import { useEffect } from 'react';
@@ -19,6 +20,7 @@ const INITIAL_CUSTOMER = {
 const Register = (props) => {
   const [dataAccount, setDataAccount] = useState(INITIAL_ACCOUNT);
   const [dataCustomer, setDataCustomer] = useState(INITIAL_CUSTOMER);
+  const navigate = useNavigate();
 
   const { Option } = Select;
   const [passwordCheck, setPasswordCheck] = useState('');
@@ -84,7 +86,7 @@ const Register = (props) => {
         desc: 'Vui lòng điền email',
       });
       return;
-    } else if (!/\S+@\S+\.\S+/.test(dataCustomer.email)) {
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(dataAccount.email)) {
       openNotificationWithIcon({
         type: 'warning',
         message: 'email không hợp lệ',
@@ -98,6 +100,13 @@ const Register = (props) => {
         desc: 'Vui lòng điền mật khẩu',
       });
       return;
+    } else if (dataAccount.password.length <= 5) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Mật khẩu quá ngắn',
+        desc: 'mật khẩu phải 6 ký tự',
+      });
+      return;
     } else if (dataAccount.password !== passwordCheck) {
       openNotificationWithIcon({
         type: 'warning',
@@ -106,6 +115,65 @@ const Register = (props) => {
       });
       return;
     }
+    fetch(`${LINKCONNECT_BASE}/addAccount`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        Accepts: '*/*',
+
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(dataAccount),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data === 1) {
+          // thêm cả thông tin vào customer
+          fetch(`${LINKCONNECT_BASE}/saveCustomer`, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json',
+              Accepts: '*/*',
+
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(dataCustomer),
+          })
+            .then((response1) => response1.json())
+            .then((data1) => {});
+
+          // chuyển trang
+          Navigate('/login');
+          openNotificationWithIcon({
+            type: 'success',
+            message: 'Thêm mới thành công',
+            desc: dataAccount.email,
+          });
+        } else if (data === 2) {
+          openNotificationWithIcon({
+            type: 'warning',
+            message: 'Email đăng ký đã tồn tại',
+            desc: dataAccount.email,
+          });
+        }
+      })
+      .catch((error) => {
+        openNotificationWithIcon({
+          type: 'error',
+          message: 'Thêm mới thất bại',
+          desc: error,
+        });
+      });
   };
   return (
     <div className="grid wide">

@@ -30,6 +30,7 @@ function App() {
         </Route>
         <Route path="/product" element={<Product />}></Route>
         <Route path="/productDetails" element={<ProductDetails />} />
+        <Route path="*" element={<HomePage to="/" replace />} />
       </Routes>
     </Layout>
   );

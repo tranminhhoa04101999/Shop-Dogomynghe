@@ -1,23 +1,45 @@
-import "./Account.css";
-import { NavLink, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
-import InputMain from "../../Base/InputMain";
-import ButtonTransparent from "../../Base/ButtonTransparent";
+import './Account.css';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import InputMain from '../../Base/InputMain';
+import ButtonTransparent from '../../Base/ButtonTransparent';
+import { LINKCONNECT_BASE } from '../../../App';
+import { notification } from 'antd';
+
+const INITIAL_CUSTOMER = {
+  idCustomer: 0,
+  name: '',
+  phone: '',
+  address: '',
+  dateCreate: '',
+  account: { email: '' },
+};
 
 const Account = (props) => {
   const [activeLink, setActiveLink] = useState(false);
-  const [lastName, setLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [date, setDate] = useState("");
-  const [phone, setPhone] = useState("");
 
+  const [dataCustomer, setDataCustomer] = useState(INITIAL_CUSTOMER);
+  const navigate = useNavigate();
+
+  const openNotificationWithIcon = (props) => {
+    notification[props.type]({
+      message: props.message,
+      description: props.desc,
+    });
+  };
   useEffect(() => {
-    setLastName("Trần Minh");
-    setFirstName("Hòa");
-    setEmail("tmhoa111@gmail.com");
-    setPhone("0374269758");
-    setDate("2022-01-13");
+    if (localStorage.getItem('infoLogined') === null) {
+      navigate('/login');
+    } else {
+      window.scrollTo(0, 0);
+      let info = JSON.parse(localStorage.getItem('infoLogined'));
+      // get data customer
+      fetch(`${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${info.idAccount}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setDataCustomer(data);
+        });
+    }
   }, []);
 
   const activeLinkFalse = () => {
@@ -26,26 +48,78 @@ const Account = (props) => {
   const activeLinkTrue = () => {
     setActiveLink(true);
   };
-  const inputLastNameOnChange = (event) => {
-    setLastName(event.target.value);
+  const inputNameOnChange = (event) => {
+    setDataCustomer((prevData) => ({ ...prevData, name: event.target.value }));
   };
-  const inputFirstNameOnChange = (event) => {
-    setFirstName(event.target.value);
-  };
-  const inputEmailOnChange = (event) => {
-    setEmail(event.target.value);
-  };
-  const inputDateOnChange = (event) => {
-    setDate(event.target.value);
+  const inputEmailOnChange = () => {};
+  const inputAddressOnChange = (event) => {
+    setDataCustomer((prevData) => ({ ...prevData, address: event.target.value }));
   };
   const inputPhoneOnChange = (event) => {
-    setPhone(event.target.value);
+    setDataCustomer((prevData) => ({ ...prevData, phone: event.target.value }));
   };
+  const logoutHandler = () => {
+    localStorage.removeItem('infoLogined');
+    window.location.reload(false);
+  };
+  const updateInfoHandler = () => {
+    if (dataCustomer.name === '') {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Họ Tên trống',
+        desc: 'Vui lòng điền họ tên',
+      });
+      return;
+    } else if (dataCustomer.phone === '') {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Số điện thoại trống',
+        desc: 'Vui lòng điền SĐT',
+      });
+      return;
+    } else if (dataCustomer.phone.length + 1 <= 10) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'SĐT chưa đúng',
+        desc: 'SĐT phải nhiều hơn 9 số',
+      });
+      return;
+    } else if (dataCustomer.address === '') {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Địa chỉ trống',
+        desc: 'Vui lòng điền địa chỉ',
+      });
+      return;
+    }
+    fetch(`${LINKCONNECT_BASE}/saveCustomer`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        Accepts: '*/*',
 
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(dataCustomer),
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        openNotificationWithIcon({
+          type: 'success',
+          message: 'Thay đổi thông tin thành công',
+          desc: '',
+        })
+      );
+  };
   return (
     <div className="grid wide">
       <div className="account-wrap">
-        <div className="account__title">Chào mừng trở lại. trần minh hòa</div>
+        <div className="account__title">Chào mừng trở lại {dataCustomer.name}.</div>
         <div className="row">
           <div className="col l-3">
             <ul className="account-left__list">
@@ -56,29 +130,15 @@ const Account = (props) => {
                     to=""
                     className={({ isActive }) =>
                       isActive
-                        ? "account-left__item-link account-left__item-link--active"
-                        : "account-left__item-link"
+                        ? 'account-left__item-link account-left__item-link--active'
+                        : 'account-left__item-link'
                     }
                   >
                     Thông tin tài khoản
                   </NavLink>
                 </div>
               </li>
-              <li className="account-left__item">
-                <div className="account-left__item-title">Sổ địa chỉ</div>
-                <div onClick={activeLinkTrue}>
-                  <NavLink
-                    to="address"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "account-left__item-link account-left__item-link--active"
-                        : "account-left__item-link"
-                    }
-                  >
-                    Địa chỉ giao hàng
-                  </NavLink>
-                </div>
-              </li>
+
               <li className="account-left__item">
                 <div className="account-left__item-title">Đơn hàng</div>
                 <div onClick={activeLinkTrue}>
@@ -86,41 +146,20 @@ const Account = (props) => {
                     to="accountPurchaseHistory"
                     className={({ isActive }) =>
                       isActive
-                        ? "account-left__item-link account-left__item-link--active"
-                        : "account-left__item-link"
+                        ? 'account-left__item-link account-left__item-link--active'
+                        : 'account-left__item-link'
                     }
                   >
                     Lịch sử mua hàng
                   </NavLink>
                 </div>
               </li>
-              <li className="account-left__item">
-                <div className="account-left__item-title">Wishlist</div>
-                <div onClick={activeLinkTrue}>
-                  <NavLink
-                    to="accountFavoriteList"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "account-left__item-link account-left__item-link--active"
-                        : "account-left__item-link"
-                    }
-                  >
-                    Danh sách yêu thích
-                  </NavLink>
-                </div>
-              </li>
+
               <li className="account-left__item">
                 <div>
-                  <NavLink
-                    to=""
-                    className={({ isActive }) =>
-                      isActive
-                        ? "account-left__item-link account-left__item-link--active"
-                        : "account-left__item-link"
-                    }
-                  >
-                    Đăng xuất tài khoản
-                  </NavLink>
+                  <ButtonTransparent onClick={() => logoutHandler()}>
+                    Đăng xuất
+                  </ButtonTransparent>
                 </div>
               </li>
             </ul>
@@ -131,51 +170,34 @@ const Account = (props) => {
                 <div className="account-left__item-title">Thông tin tài khoản</div>
                 <InputMain
                   type="text"
-                  placeholder="Họ"
-                  onChange={inputLastNameOnChange}
-                  value={lastName}
-                />
-                <InputMain
-                  type="text"
-                  placeholder="Tên"
-                  onChange={inputFirstNameOnChange}
-                  value={firstName}
+                  placeholder="Họ và Tên"
+                  onChange={inputNameOnChange}
+                  value={dataCustomer.name}
                 />
                 <InputMain
                   type="text"
                   placeholder="Email"
                   onChange={inputEmailOnChange}
-                  value={email}
+                  value={dataCustomer.account.email}
+                  disabled={true}
                 />
-                <InputMain type="date" onChange={inputDateOnChange} value={date} />
+
                 <InputMain
                   type="text"
                   onChange={inputPhoneOnChange}
                   placeholder="Số điên thoại"
-                  value={phone}
+                  value={dataCustomer.phone}
                 />
-                <div className="account-left__wrap-gender">
-                  <input
-                    id="account-left__registerRadio1"
-                    type="radio"
-                    name="gender"
-                    defaultChecked
-                  />
-                  <label
-                    htmlFor="account-left__registerRadio1"
-                    className="account-left__Radio-label"
-                  >
-                    Nam
-                  </label>
-                  <input id="account-left__registerRadio2" type="radio" name="gender" />
-                  <label
-                    htmlFor="account-left__registerRadio2"
-                    className="account-left__Radio-label"
-                  >
-                    Nữ
-                  </label>
-                </div>
-                <ButtonTransparent>Cập nhật thông tin</ButtonTransparent>
+                <InputMain
+                  type="text"
+                  onChange={inputAddressOnChange}
+                  placeholder="Địa chỉ giao hàng"
+                  value={dataCustomer.address}
+                />
+
+                <ButtonTransparent onClick={() => updateInfoHandler()}>
+                  Cập nhật thông tin
+                </ButtonTransparent>
               </div>
             )}
             <Outlet />

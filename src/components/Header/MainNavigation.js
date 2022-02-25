@@ -185,9 +185,16 @@ const NavBar = (props) => {
               </button>
             </div>
             <div className="header-right__user">
-              <NavLink to="/register" className="header-right__user-link">
-                <FontAwesomeIcon icon={faUser} className="header-right__user-icon" />
-              </NavLink>
+              {localStorage.getItem('infoLogined') === null ? (
+                <NavLink to="/login" className="header-right__user-link">
+                  <FontAwesomeIcon icon={faUser} className="header-right__user-icon" />
+                </NavLink>
+              ) : (
+                <NavLink to="/account" className="header-right__user-link">
+                  <FontAwesomeIcon icon={faUser} className="header-right__user-icon" />
+                  <span>{localStorage.getItem('infoLogined').email}</span>
+                </NavLink>
+              )}
             </div>
             <div className="header-right__cart">
               <span className="header-right__cart-notice">0</span>
