@@ -19,6 +19,7 @@ const NavBar = (props) => {
   const [dataCategory, setDataCategory] = useState([INITIAL_CATEGORY]);
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
+  const listIdProdLocal = JSON.parse(localStorage.getItem('cartListId'));
 
   useEffect(() => {
     // get all category
@@ -26,6 +27,8 @@ const NavBar = (props) => {
       .then((response) => response.json())
       .then((data) => setDataCategory(data));
   }, []);
+
+  // useEffect(()=>{},[listIdProdLocal])
 
   const inputSearchOnChange = (props) => {
     setSearchText(props.value);
@@ -197,7 +200,9 @@ const NavBar = (props) => {
               )}
             </div>
             <div className="header-right__cart">
-              <span className="header-right__cart-notice">0</span>
+              <span className="header-right__cart-notice">
+                {listIdProdLocal === null ? 0 : listIdProdLocal.length}
+              </span>
               <NavLink to="/cart" className="header-right__cart-link">
                 <FontAwesomeIcon
                   icon={faShoppingCart}

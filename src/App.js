@@ -17,8 +17,11 @@ export const LINKIMG_BASE =
   'https://firebasestorage.googleapis.com/v0/b/image-kddgmn-52ebf.appspot.com/o/images%2F';
 
 function App() {
+  const clgReload = () => {
+    // console.log('reload');
+  };
   return (
-    <Layout>
+    <Layout reload={clgReload}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/HomePage" element={<HomePage />} />
@@ -29,7 +32,7 @@ function App() {
           <Route path="address" element={<AccoutAddress />} />
         </Route>
         <Route path="/product" element={<Product />}></Route>
-        <Route path="/productDetails" element={<ProductDetails />} />
+        <Route path="/productDetails" element={<ProductDetails reload={clgReload} />} />
         <Route path="*" element={<HomePage to="/" replace />} />
       </Routes>
     </Layout>

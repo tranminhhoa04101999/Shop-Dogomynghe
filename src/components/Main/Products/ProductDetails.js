@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
+import { notification } from 'antd';
 
 const ProductDetails = (props) => {
   const [imgProduct, setImgProduct] = useState([]);
+  const [listIdProd, setListIdProd] = useState([]);
   const [imgMain, setImgMain] = useState();
   const [quantityAddCart, setQuantityAddCart] = useState(1);
   const [dataProduct, setDataProduct] = useState({
@@ -35,6 +37,12 @@ const ProductDetails = (props) => {
     style: 'currency',
     currency: 'VND',
   });
+  const openNotificationWithIcon = (props) => {
+    notification[props.type]({
+      message: props.message,
+      description: props.desc,
+    });
+  };
 
   useEffect(() => {
     if (state === null) {
@@ -54,6 +62,14 @@ const ProductDetails = (props) => {
         .then((data) => {
           setDataProduct(data);
         });
+      // lấy các giá trị cũ của giỏ hàng set state;
+      let dataLocal = JSON.parse(localStorage.getItem('cartListId'));
+      if (dataLocal === null) {
+        // console.log('data local null');
+        setListIdProd([]);
+      } else {
+        setListIdProd(dataLocal);
+      }
     }
   }, []);
 
@@ -68,6 +84,34 @@ const ProductDetails = (props) => {
   };
   const addQuantityAddHandler = (props) => {
     setQuantityAddCart((prevData) => prevData + 1);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('cartListId', JSON.stringify(listIdProd));
+  }, [listIdProd]);
+
+  const addCartHandler = () => {
+    //lưu sản phảma vào localstorage
+    setListIdProd((prevData) => {
+      let check = prevData.findIndex((item) => item.id === dataProduct.idProduct);
+      if (check === -1) {
+        return [...prevData, { id: dataProduct.idProduct, count: quantityAddCart }];
+      }
+      return prevData.map((item) =>
+        item.id === dataProduct.idProduct
+          ? { ...item, count: item.count + quantityAddCart }
+          : item
+      );
+    });
+
+    window.location.reload(false);
+    // props.reload();
+
+    openNotificationWithIcon({
+      type: 'success',
+      message: 'Thành công',
+      desc: 'Đã thêm vào giỏ hàng ' + dataProduct.nameProduct,
+    });
   };
 
   return (
@@ -165,7 +209,12 @@ const ProductDetails = (props) => {
                 />
               </div>
               <div className="P-details-right__wrap-addcart">
-                <button className="P-details-right__addcart">Thêm Vào Giỏ</button>
+                <button
+                  className="P-details-right__addcart"
+                  onClick={() => addCartHandler()}
+                >
+                  Thêm Vào Giỏ
+                </button>
                 <button className="P-details-right__addcart">Mua Ngay</button>
               </div>
               <div className="P-details-right__wrap-description">
