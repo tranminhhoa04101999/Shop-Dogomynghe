@@ -5,15 +5,35 @@ import { Input, Space, Image, notification } from 'antd';
 import { useState, useEffect } from 'react';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
 
+const INITIAL_INFOORDERS = {
+  phone: '',
+  address: '',
+  note: '',
+  total: 0,
+  dateCreate: new Date(),
+  dateModified: new Date(),
+  dateEnd: null,
+  status: {
+    idStatus: 1,
+  },
+  customer: {
+    idCustomer: 0,
+  },
+  employee: null,
+};
+
+const INITIAL_ORDERITEMS = {
+  idProduct: 0,
+  quantity: 0,
+};
 const Cart = (props) => {
   const [dataProdCart, setDataProdCart] = useState([]);
   const [dataProdLocal, setDataProdLocal] = useState([]);
-  const [dataInfoOrder, setDataInfoOrder] = useState({
-    phone: '',
-    name: '',
-    address: '',
-  });
+  const [dataInfoOrder, setDataInfoOrder] = useState(INITIAL_INFOORDERS);
+  const [name, setName] = useState('');
+  const [dataCustomer, setDataCustomer] = useState(null);
   const dataCartLocal = JSON.parse(localStorage.getItem('cartListId'));
+  const dataLogined = JSON.parse(localStorage.getItem('infoLogined'));
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -29,20 +49,27 @@ const Cart = (props) => {
   useEffect(() => {
     if (dataCartLocal !== null) {
       dataCartLocal.map((item) =>
-        fetch(`${LINKCONNECT_BASE}/getproductbyid?idProduct=${item.id}`)
+        fetch(`${LINKCONNECT_BASE}/getproductbyid?idProduct=${item.idProduct}`)
           .then((response) => response.json())
           .then((data) => {
-            fetch(`${LINKCONNECT_BASE}/imgproductwith?idProduct=${item.id}`)
+            fetch(`${LINKCONNECT_BASE}/imgproductwith?idProduct=${item.idProduct}`)
               .then((response) => response.json())
               .then((data1) =>
                 setDataProdCart((prev) => [
                   ...prev,
-                  { content: data, count: item.count, imgName: data1[0].imgURL },
+                  { content: data, quantity: item.quantity, imgName: data1[0].imgURL },
                 ])
               );
           })
       );
       setDataProdLocal(dataCartLocal);
+      if (dataLogined !== null) {
+        fetch(
+          `${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${dataLogined.idAccount}`
+        )
+          .then((response) => response.json())
+          .then((data) => setDataCustomer(data));
+      }
     }
     return () => {
       setDataProdCart([]);
@@ -51,14 +78,14 @@ const Cart = (props) => {
 
   const subCountHandler = (props) => {
     const dataNew = dataProdCart.map((item) => {
-      if (item.count > 0) {
-        return item.content.idProduct === props.id
-          ? { ...item, count: item.count - 1 }
+      if (item.quantity > 0) {
+        return item.content.idProduct === props.idProduct
+          ? { ...item, quantity: item.quantity - 1 }
           : item;
       }
       return item;
     });
-    const indexCountZero = dataNew.findIndex((item) => item.count === 0);
+    const indexCountZero = dataNew.findIndex((item) => item.quantity === 0);
 
     if (indexCountZero >= 0) {
       dataNew.splice(indexCountZero, 1);
@@ -69,12 +96,14 @@ const Cart = (props) => {
 
     // remove tren local
     const dataLocalNew = dataProdLocal.map((item) => {
-      if (item.count > 0) {
-        return item.id === props.id ? { ...item, count: item.count - 1 } : item;
+      if (item.quantity > 0) {
+        return item.idProduct === props.idProduct
+          ? { ...item, quantity: item.quantity - 1 }
+          : item;
       }
       return item;
     });
-    const indexCountZeroLocal = dataLocalNew.findIndex((item) => item.count === 0);
+    const indexCountZeroLocal = dataLocalNew.findIndex((item) => item.quantity === 0);
 
     if (indexCountZero >= 0) {
       dataLocalNew.splice(indexCountZeroLocal, 1);
@@ -88,13 +117,15 @@ const Cart = (props) => {
   const addCountHandler = (props) => {
     setDataProdCart((prevData) =>
       prevData.map((item) =>
-        item.content.idProduct === props.id ? { ...item, count: item.count + 1 } : item
+        item.content.idProduct === props.idProduct
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
 
     // remove tren local
     const dataLocalNew = dataProdLocal.map((item) =>
-      item.id === props.id ? { ...item, count: item.count + 1 } : item
+      item.idProduct === props.idProduct ? { ...item, quantity: item.quantity + 1 } : item
     );
 
     setDataProdLocal(dataLocalNew);
@@ -102,13 +133,16 @@ const Cart = (props) => {
   };
 
   const nameOnchange = (event) => {
-    setDataInfoOrder((prev) => ({ ...prev, name: event.target.value }));
+    setName(event.target.value);
   };
   const phoneOnchange = (event) => {
     setDataInfoOrder((prev) => ({ ...prev, phone: event.target.value }));
   };
   const addressOnchange = (event) => {
     setDataInfoOrder((prev) => ({ ...prev, address: event.target.value }));
+  };
+  const noteOnchange = (event) => {
+    setDataInfoOrder((prev) => ({ ...prev, note: event.target.value }));
   };
 
   const orderHandler = () => {
@@ -141,6 +175,86 @@ const Cart = (props) => {
       });
       return;
     }
+    //tính tổng tiền
+    let total = dataProdCart.reduce(
+      (prev, current) =>
+        current.content.discount !== null
+          ? prev +
+            current.content.price * current.content.discount.percent * current.quantity
+          : prev + current.content.price * current.quantity,
+      0
+    );
+    // tạo dữ liệu thêm
+    let dataOrderAdd = dataInfoOrder;
+    dataOrderAdd.total = total;
+    if (dataCustomer !== null) {
+      dataOrderAdd.customer.idCustomer = dataCustomer.idCustomer;
+    }
+
+    // thêm mới order
+    fetch(`${LINKCONNECT_BASE}/saveOrder?name=${dataInfoOrder.name}`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        Accepts: '*/*',
+
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(dataOrderAdd),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data === 1) {
+          fetch(`${LINKCONNECT_BASE}/saveOrderItems`, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json',
+              Accepts: '*/*',
+
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(dataProdLocal),
+          })
+            .then((response) => response.json())
+            .then((data1) => {
+              if (data1 === 1) {
+                openNotificationWithIcon({
+                  type: 'success',
+                  message: 'Đặt hàng thành công',
+                });
+              } else {
+                openNotificationWithIcon({
+                  type: 'error',
+                  message: 'Đặt hàng thất bại',
+                });
+              }
+            })
+            .catch((error) =>
+              openNotificationWithIcon({
+                type: 'error',
+                message: 'Đặt hàng thất bại',
+                desc: error,
+              })
+            );
+        }
+      })
+      .catch((error) =>
+        openNotificationWithIcon({
+          type: 'error',
+          message: 'Đặt hàng thất bại',
+          desc: error,
+        })
+      );
   };
 
   return (
@@ -198,16 +312,20 @@ const Cart = (props) => {
                           type="button"
                           className="cart-product__quantity-area-btn"
                           value="-"
-                          onClick={() => subCountHandler({ id: item.content.idProduct })}
+                          onClick={() =>
+                            subCountHandler({ idProduct: item.content.idProduct })
+                          }
                         />
                         <span className="cart-product__quantity-area-num">
-                          {item.count}
+                          {item.quantity}
                         </span>
                         <input
                           type="button"
                           className="cart-product__quantity-area-btn"
                           value="+"
-                          onClick={() => addCountHandler({ id: item.content.idProduct })}
+                          onClick={() =>
+                            addCountHandler({ idProduct: item.content.idProduct })
+                          }
                         />
                       </div>
                     </td>
@@ -217,9 +335,9 @@ const Cart = (props) => {
                           ? formatter.format(
                               item.content.price *
                                 item.content.discount.percent *
-                                item.count
+                                item.quantity
                             )
-                          : formatter.format(item.content.price * item.count)}
+                          : formatter.format(item.content.price * item.quantity)}
                       </p>
                     </td>
                     <td className="cart-table__wrap-remove">
@@ -234,7 +352,13 @@ const Cart = (props) => {
                 ))}
               </tbody>
             </table>
-            <input type="text" className="cart-note" placeholder="Lưu ý về đơn hàng" />
+            <input
+              type="text"
+              className="cart-note"
+              placeholder="Lưu ý về đơn hàng"
+              onChange={noteOnchange}
+              value={dataInfoOrder.note}
+            />
           </div>
           <div className="col l-4">
             <p className="cart-right__title">Thông tin giao hàng</p>
@@ -249,7 +373,7 @@ const Cart = (props) => {
                 placeholder="Họ tên"
                 style={{ width: 400 }}
                 onChange={nameOnchange}
-                value={dataInfoOrder.name}
+                value={name}
               />
               <Input
                 placeholder="địa chỉ giao hàng"
@@ -271,10 +395,10 @@ const Cart = (props) => {
                             prev +
                             current.content.price *
                               current.content.discount.percent *
-                              current.count
+                              current.quantity
                           );
                         }
-                        return prev + current.content.price * current.count;
+                        return prev + current.content.price * current.quantity;
                       }, 0)
                     )
                   : 0}

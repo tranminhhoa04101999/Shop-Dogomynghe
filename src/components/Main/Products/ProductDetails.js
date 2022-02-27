@@ -95,11 +95,14 @@ const ProductDetails = (props) => {
     setListIdProd((prevData) => {
       let check = prevData.findIndex((item) => item.id === dataProduct.idProduct);
       if (check === -1) {
-        return [...prevData, { id: dataProduct.idProduct, count: quantityAddCart }];
+        return [
+          ...prevData,
+          { idProduct: dataProduct.idProduct, quantity: quantityAddCart },
+        ];
       }
       return prevData.map((item) =>
         item.id === dataProduct.idProduct
-          ? { ...item, count: item.count + quantityAddCart }
+          ? { ...item, quantity: item.quantity + quantityAddCart }
           : item
       );
     });
