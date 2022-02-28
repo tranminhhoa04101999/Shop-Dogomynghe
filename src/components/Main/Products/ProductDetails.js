@@ -93,7 +93,7 @@ const ProductDetails = (props) => {
   const addCartHandler = () => {
     //lưu sản phảma vào localstorage
     setListIdProd((prevData) => {
-      let check = prevData.findIndex((item) => item.id === dataProduct.idProduct);
+      let check = prevData.findIndex((item) => item.idProduct === dataProduct.idProduct);
       if (check === -1) {
         return [
           ...prevData,
@@ -101,7 +101,7 @@ const ProductDetails = (props) => {
         ];
       }
       return prevData.map((item) =>
-        item.id === dataProduct.idProduct
+        item.idProduct === dataProduct.idProduct
           ? { ...item, quantity: item.quantity + quantityAddCart }
           : item
       );

@@ -22,10 +22,6 @@ const INITIAL_INFOORDERS = {
   employee: null,
 };
 
-const INITIAL_ORDERITEMS = {
-  idProduct: 0,
-  quantity: 0,
-};
 const Cart = (props) => {
   const [dataProdCart, setDataProdCart] = useState([]);
   const [dataProdLocal, setDataProdLocal] = useState([]);
@@ -123,7 +119,6 @@ const Cart = (props) => {
       )
     );
 
-    // remove tren local
     const dataLocalNew = dataProdLocal.map((item) =>
       item.idProduct === props.idProduct ? { ...item, quantity: item.quantity + 1 } : item
     );
@@ -145,7 +140,7 @@ const Cart = (props) => {
     setDataInfoOrder((prev) => ({ ...prev, note: event.target.value }));
   };
 
-  const orderHandler = () => {
+  const orderHandler = async () => {
     if (dataInfoOrder.phone === '') {
       openNotificationWithIcon({
         type: 'warning',
@@ -190,9 +185,9 @@ const Cart = (props) => {
     if (dataCustomer !== null) {
       dataOrderAdd.customer.idCustomer = dataCustomer.idCustomer;
     }
-
-    // thêm mới order
-    fetch(`${LINKCONNECT_BASE}/saveOrder?name=${dataInfoOrder.name}`, {
+    // kiểm tra còn hàng không trước khi đặt
+    var dataResult = [];
+    await fetch(`${LINKCONNECT_BASE}/checkQuantityProduct`, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -205,56 +200,108 @@ const Cart = (props) => {
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
-      body: JSON.stringify(dataOrderAdd),
+      body: JSON.stringify(dataProdLocal),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data === 1) {
-          fetch(`${LINKCONNECT_BASE}/saveOrderItems`, {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-              'Content-Type': 'application/json',
-              Accepts: '*/*',
+        dataResult = data;
+      });
+    if (dataResult.length === 0) {
+      // thêm mới order
+      fetch(`${LINKCONNECT_BASE}/saveOrder?name=${name}`, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          Accepts: '*/*',
 
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-            body: JSON.stringify(dataProdLocal),
-          })
-            .then((response) => response.json())
-            .then((data1) => {
-              if (data1 === 1) {
-                openNotificationWithIcon({
-                  type: 'success',
-                  message: 'Đặt hàng thành công',
-                });
-              } else {
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(dataOrderAdd),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data === 1) {
+            fetch(`${LINKCONNECT_BASE}/saveOrderItems`, {
+              method: 'POST',
+              mode: 'cors',
+              cache: 'no-cache',
+              credentials: 'same-origin',
+              headers: {
+                'Content-Type': 'application/json',
+                Accepts: '*/*',
+
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              redirect: 'follow',
+              referrerPolicy: 'no-referrer',
+              body: JSON.stringify(dataProdLocal),
+            })
+              .then((response) => response.json())
+              .then((data1) => {
+                console.log('data1', data1);
+                if (data1 === 1) {
+                  openNotificationWithIcon({
+                    type: 'success',
+                    message: 'Đặt hàng thành công',
+                  });
+                  localStorage.setItem('cartListId', JSON.stringify([]));
+                  setDataProdCart([]);
+                } else {
+                  openNotificationWithIcon({
+                    type: 'error',
+                    message: 'Đặt hàng thất bại',
+                    desc: 'save orderitém',
+                  });
+                }
+              })
+              .catch((error) =>
                 openNotificationWithIcon({
                   type: 'error',
                   message: 'Đặt hàng thất bại',
-                });
-              }
-            })
-            .catch((error) =>
-              openNotificationWithIcon({
-                type: 'error',
-                message: 'Đặt hàng thất bại',
-                desc: error,
-              })
-            );
-        }
-      })
-      .catch((error) =>
-        openNotificationWithIcon({
-          type: 'error',
-          message: 'Đặt hàng thất bại',
-          desc: error,
+                  desc: error,
+                })
+              );
+          }
         })
-      );
+        .catch((error) =>
+          openNotificationWithIcon({
+            type: 'error',
+            message: 'Đặt hàng thất bại',
+            desc: error,
+          })
+        );
+    } else {
+      openNotificationWithIcon({
+        type: 'error',
+        message: dataResult[0].message,
+        desc: 'vui lòng liên hệ 0374269758',
+      });
+    }
+  };
+  const removeItem = (props) => {
+    const dataNew = dataProdCart;
+    const indexCountZero = dataNew.findIndex(
+      (item) => item.content.idProduct === props.idProduct
+    );
+
+    dataNew.splice(indexCountZero, 1);
+    setDataProdCart(dataNew);
+
+    // remove tren local
+    const dataLocalNew = dataProdLocal;
+    const indexCountZeroLocal = dataLocalNew.findIndex(
+      (item) => item.idProduct === props.idProduct
+    );
+
+    dataLocalNew.splice(indexCountZeroLocal, 1);
+    setDataProdLocal(dataLocalNew);
+    localStorage.setItem('cartListId', JSON.stringify(dataLocalNew));
+    window.location.reload(false);
   };
 
   return (
@@ -341,7 +388,10 @@ const Cart = (props) => {
                       </p>
                     </td>
                     <td className="cart-table__wrap-remove">
-                      <div className="cart-table__remove">
+                      <div
+                        className="cart-table__remove"
+                        onClick={() => removeItem({ idProduct: item.content.idProduct })}
+                      >
                         <FontAwesomeIcon
                           icon={faTrashAlt}
                           className="cart-table__remove-icon"
@@ -360,59 +410,69 @@ const Cart = (props) => {
               value={dataInfoOrder.note}
             />
           </div>
-          <div className="col l-4">
-            <p className="cart-right__title">Thông tin giao hàng</p>
-            <Space direction="vertical">
-              <Input
-                placeholder="Số điện thoại"
-                style={{ width: 400 }}
-                onChange={phoneOnchange}
-                value={dataInfoOrder.phone}
-              />
-              <Input
-                placeholder="Họ tên"
-                style={{ width: 400 }}
-                onChange={nameOnchange}
-                value={name}
-              />
-              <Input
-                placeholder="địa chỉ giao hàng"
-                style={{ width: 400 }}
-                onChange={addressOnchange}
-                value={dataInfoOrder.address}
-              />
-            </Space>
+          {dataProdCart.length !== 0 ? (
+            <div className="col l-4">
+              <p className="cart-right__title">Thông tin giao hàng</p>
+              <Space direction="vertical">
+                <Input
+                  placeholder="Số điện thoại"
+                  style={{ width: 400 }}
+                  onChange={phoneOnchange}
+                  value={dataInfoOrder.phone}
+                />
+                <Input
+                  placeholder="Họ tên"
+                  style={{ width: 400 }}
+                  onChange={nameOnchange}
+                  value={name}
+                />
+                <Input
+                  placeholder="địa chỉ giao hàng"
+                  style={{ width: 400 }}
+                  onChange={addressOnchange}
+                  value={dataInfoOrder.address}
+                />
+              </Space>
 
-            <p className="cart-right__title">Thành tiền</p>
-            <div className="cart-right__wrap-total">
-              <span className="cart-right__total-text">Tổng</span>
-              <span className="cart-right__total-price">
-                {dataProdCart.length !== 0
-                  ? formatter.format(
-                      dataProdCart.reduce((prev, current) => {
-                        if (current.content.discount !== null) {
-                          return (
-                            prev +
-                            current.content.price *
-                              current.content.discount.percent *
-                              current.quantity
-                          );
-                        }
-                        return prev + current.content.price * current.quantity;
-                      }, 0)
-                    )
-                  : 0}
-              </span>
-            </div>
-            <div className="cart-right__wrap-checkout">
-              <div className="cart-right__checkout" onClick={() => orderHandler()}>
-                <span className="cart-right__checkout-text">Đặt hàng</span>
+              <p className="cart-right__title">Thành tiền</p>
+              <div className="cart-right__wrap-total">
+                <span className="cart-right__total-text">Tổng</span>
+                <span className="cart-right__total-price">
+                  {dataProdCart.length !== 0
+                    ? formatter.format(
+                        dataProdCart.reduce((prev, current) => {
+                          if (current.content.discount !== null) {
+                            return (
+                              prev +
+                              current.content.price *
+                                current.content.discount.percent *
+                                current.quantity
+                            );
+                          }
+                          return prev + current.content.price * current.quantity;
+                        }, 0)
+                      )
+                    : 0}
+                </span>
               </div>
+              <div className="cart-right__wrap-checkout">
+                <div className="cart-right__checkout" onClick={() => orderHandler()}>
+                  <span className="cart-right__checkout-text">Đặt hàng</span>
+                </div>
+                <a href="/product" className="cart-right__collection">
+                  <span className="cart-right__collection-text">Tiếp Tục Mua Sắm</span>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div>
               <a href="/product" className="cart-right__collection">
-                <span className="cart-right__collection-text">Tiếp Tục Mua Sắm</span>
+                <span className="cart-right__collection-text">
+                  Giỏ hàng trống -- Đi mua sắm
+                </span>
               </a>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import Account from './components/Main/Account/Account';
 import Register from './components/Main/Register';
 import AccoutAddress from './components/Main/Account/AccountAddress';
 import Product from './components/Main/Products/Product';
+import SearchOrder from './components/Main/Order/SearchOrder';
 
 export const LINKCONNECT_BASE = 'http://localhost:8080';
 export const LINKIMG_BASE =
@@ -33,6 +34,7 @@ function App() {
         </Route>
         <Route path="/product" element={<Product />}></Route>
         <Route path="/productDetails" element={<ProductDetails reload={clgReload} />} />
+        <Route path="/searchOrder" element={<SearchOrder />} />
         <Route path="*" element={<HomePage to="/" replace />} />
       </Routes>
     </Layout>

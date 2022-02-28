@@ -162,8 +162,8 @@ const NavBar = (props) => {
                 </NavLink>
               </li>
               <li className="header-nav__item">
-                <NavLink to="/lienhe" className="header-nav__item-link">
-                  Liên hệ
+                <NavLink to="/searchOrder" className="header-nav__item-link">
+                  Tra cứu đơn hàng
                 </NavLink>
               </li>
             </ul>
