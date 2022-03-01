@@ -32,13 +32,14 @@ const Account = (props) => {
       navigate('/login');
     } else {
       window.scrollTo(0, 0);
-      let info = JSON.parse(localStorage.getItem('infoLogined'));
+      const info = JSON.parse(localStorage.getItem('infoLogined'));
       // get data customer
       fetch(`${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${info.idAccount}`)
         .then((response) => response.json())
         .then((data) => {
           setDataCustomer(data);
-        });
+        })
+        .catch((error) => console.log(error));
     }
   }, []);
 
@@ -116,6 +117,7 @@ const Account = (props) => {
         })
       );
   };
+  const updatePasswordHandler = () => {};
   return (
     <div className="grid wide">
       <div className="account-wrap">
@@ -127,7 +129,7 @@ const Account = (props) => {
                 <div className="account-left__item-title">Tài khoản</div>
                 <div onClick={activeLinkFalse}>
                   <NavLink
-                    to=""
+                    to="/account"
                     className={({ isActive }) =>
                       isActive
                         ? 'account-left__item-link account-left__item-link--active'
@@ -137,13 +139,26 @@ const Account = (props) => {
                     Thông tin tài khoản
                   </NavLink>
                 </div>
+
+                <div onClick={activeLinkTrue} style={{ marginTop: '20px' }}>
+                  <NavLink
+                    to="/account/updatePassword"
+                    className={({ isActive }) =>
+                      isActive
+                        ? 'account-left__item-link account-left__item-link--active'
+                        : 'account-left__item-link'
+                    }
+                  >
+                    Thay đổi mật khẩu
+                  </NavLink>
+                </div>
               </li>
 
               <li className="account-left__item">
                 <div className="account-left__item-title">Đơn hàng</div>
                 <div onClick={activeLinkTrue}>
                   <NavLink
-                    to="accountPurchaseHistory"
+                    to="/account/orderHistory"
                     className={({ isActive }) =>
                       isActive
                         ? 'account-left__item-link account-left__item-link--active'
@@ -195,9 +210,12 @@ const Account = (props) => {
                   value={dataCustomer.address}
                 />
 
-                <ButtonTransparent onClick={() => updateInfoHandler()}>
-                  Cập nhật thông tin
-                </ButtonTransparent>
+                <div className="container-btnAccount">
+                  <ButtonTransparent onClick={() => updateInfoHandler()}>
+                    Cập nhật thông tin
+                  </ButtonTransparent>
+                  {/* <div style={{ width: '400px' }}></div> */}
+                </div>
               </div>
             )}
             <Outlet />

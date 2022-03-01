@@ -70,3 +70,7 @@
   background-color: transparent;
   cursor: pointer;
 }
+.container-btnAccount {
+  display: flex;
+  justify-content: left;
+}

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
-import { notification, Select } from 'antd';
+import { notification } from 'antd';
 import { LINKCONNECT_BASE } from '../../App';
-
 import './Register.css';
-import { useEffect } from 'react';
 
 const INITIAL_ACCOUNT = {
   email: '',
@@ -22,7 +20,6 @@ const Register = (props) => {
   const [dataCustomer, setDataCustomer] = useState(INITIAL_CUSTOMER);
   const navigate = useNavigate();
 
-  const { Option } = Select;
   const [passwordCheck, setPasswordCheck] = useState('');
 
   const emailOnchange = (props) => {
@@ -49,7 +46,6 @@ const Register = (props) => {
       description: props.desc,
     });
   };
-  useEffect(() => {}, []);
   const registerHandler = () => {
     if (dataCustomer.name === '') {
       openNotificationWithIcon({
@@ -153,17 +149,15 @@ const Register = (props) => {
             .then((data1) => {});
 
           // chuyển trang
-          Navigate('/login');
+          navigate('/login');
           openNotificationWithIcon({
             type: 'success',
             message: 'Thêm mới thành công',
-            desc: dataAccount.email,
           });
         } else if (data === 2) {
           openNotificationWithIcon({
             type: 'warning',
             message: 'Email đăng ký đã tồn tại',
-            desc: dataAccount.email,
           });
         }
       })

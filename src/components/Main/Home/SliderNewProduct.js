@@ -94,7 +94,6 @@ const SliderNewProduct = (props) => {
     prevArrow: <PrevArrow />,
   };
   //#endregion
-
   return (
     <div className="grid wide">
       <div className="products">
