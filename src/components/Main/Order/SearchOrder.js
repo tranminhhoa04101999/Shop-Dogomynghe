@@ -56,7 +56,7 @@ const SearchOrder = () => {
   });
   const btnSubmitHandler = async () => {
     fetch(
-      `${LINKCONNECT_BASE}/searchOrderByIdOrPhone?idStatus=4&idOrders=${
+      `${LINKCONNECT_BASE}/searchOrderByIdOrPhone?idStatus=7&idOrders=${
         dataSearch === '' ? 0 : dataSearch
       }&phone=${dataSearch}`
     )

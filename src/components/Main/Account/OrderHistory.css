@@ -1,0 +1,108 @@
+.container-history__address-status {
+  border-bottom: 1px solid #999;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+}
+.history-address {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  border-right: 1px solid #999;
+}
+.history-address__title {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.history-address__content {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+.history-address__content p {
+  display: inline-block;
+  margin-bottom: 0;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+}
+.history-status {
+  width: 50%;
+  padding: 0 10px;
+}
+.history-status__icontitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.history-status__icon {
+  color: #26aa99;
+}
+.history-status__title {
+  margin-left: 8px;
+  color: #26aa99;
+  font-size: 1.4rem;
+}
+.history-status__date {
+  display: flex;
+  flex-direction: column;
+}
+.history-status__date-content {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+.history-status__date-content p {
+  font-size: 1.4rem;
+  display: inline-block;
+  margin-bottom: 0;
+  color: var(--primary-color);
+  margin-left: 10px;
+}
+.history-listproduct__card {
+  display: flex;
+  justify-content: space-between;
+}
+.history-listproduct__card-name {
+  margin: 0 10px;
+}
+.history-listproduct__card-nameProduc {
+  font-size: 1.6rem;
+  line-height: 2rem;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  align-items: center;
+}
+.history-listproduct__card-Right {
+  display: flex;
+}
+.history-listproduct__card-nameVariant {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  text-align: left;
+}
+.history-listproduct__card-total {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.history-listproduct__card-price-old {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+.history-listproduct__card-price-total {
+  font-size: 1.6rem;
+  color: var(--primary-color);
+}
+.history-totalprice {
+  font-size: 1.6rem;
+  float: right;
+}
+.history-totalprice span {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-left: 10px;
+}

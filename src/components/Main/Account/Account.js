@@ -16,7 +16,7 @@ const INITIAL_CUSTOMER = {
 };
 
 const Account = (props) => {
-  const [activeLink, setActiveLink] = useState(false);
+  const [activeLink, setActiveLink] = useState(true);
 
   const [dataCustomer, setDataCustomer] = useState(INITIAL_CUSTOMER);
   const navigate = useNavigate();

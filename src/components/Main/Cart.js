@@ -64,7 +64,12 @@ const Cart = (props) => {
           `${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${dataLogined.idAccount}`
         )
           .then((response) => response.json())
-          .then((data) => setDataCustomer(data));
+          .then((data) => {
+            setDataCustomer(data);
+            setDataInfoOrder((prev) => ({ ...prev, phone: data.phone }));
+            setDataInfoOrder((prev) => ({ ...prev, address: data.address }));
+            setName(data.name);
+          });
       }
     }
     return () => {
@@ -172,11 +177,25 @@ const Cart = (props) => {
     }
     //tính tổng tiền
     let total = dataProdCart.reduce(
-      (prev, current) =>
-        current.content.discount !== null
-          ? prev +
-            current.content.price * current.content.discount.percent * current.quantity
-          : prev + current.content.price * current.quantity,
+      (prev, current) => {
+        if (current.content.discount !== null) {
+          if (current.content.discount.isActive === 1) {
+            return (
+              prev +
+              current.content.price *
+                (1 - current.content.discount.percent) *
+                current.quantity
+            );
+          }
+        }
+        return prev + current.content.price * current.quantity;
+      },
+      // current.content.discount !== null
+      //   ? prev +
+      //     current.content.price *
+      //       (1 - current.content.discount.percent) *
+      //       current.quantity
+      //   : prev + current.content.price * current.quantity,
       0
     );
     // tạo dữ liệu thêm
@@ -338,19 +357,25 @@ const Cart = (props) => {
                       </div>
                     </td>
                     <td className="cart-table__wrap-price">
-                      <p className="cart-table__price">
-                        {item.content.discount !== null
-                          ? formatter.format(
-                              item.content.price * item.content.discount.percent
-                            )
-                          : formatter.format(item.content.price)}
-                      </p>
                       {item.content.discount !== null ? (
-                        <p className="cart-table__price-original">
-                          {formatter.format(item.content.price)}
-                        </p>
+                        <div style={{ display: 'flex' }}>
+                          {item.content.discount.isActive === 1 && (
+                            <span className="cart-table__price-original">
+                              {formatter.format(item.content.price)}
+                            </span>
+                          )}
+                          <span className="cart-table__price">
+                            {item.content.discount.isActive === 1
+                              ? formatter.format(
+                                  item.content.price * (1 - item.content.discount.percent)
+                                )
+                              : formatter.format(item.content.price)}
+                          </span>
+                        </div>
                       ) : (
-                        ''
+                        <span className="cart-table__price-original">
+                          {formatter.format(item.content.price)}
+                        </span>
                       )}
                     </td>
                     <td className="cart-table__wrap-quantity">
@@ -377,15 +402,17 @@ const Cart = (props) => {
                       </div>
                     </td>
                     <td className="cart-table__wrap-total">
-                      <p className="cart-table__total">
-                        {item.content.discount !== null
-                          ? formatter.format(
-                              item.content.price *
-                                item.content.discount.percent *
-                                item.quantity
-                            )
-                          : formatter.format(item.content.price * item.quantity)}
-                      </p>
+                      {item.content.discount !== null && (
+                        <p className="cart-table__total">
+                          {item.content.discount.isActive === 1
+                            ? formatter.format(
+                                item.content.price *
+                                  (1 - item.content.discount.percent) *
+                                  item.quantity
+                              )
+                            : formatter.format(item.content.price * item.quantity)}
+                        </p>
+                      )}
                     </td>
                     <td className="cart-table__wrap-remove">
                       <div
@@ -442,12 +469,14 @@ const Cart = (props) => {
                     ? formatter.format(
                         dataProdCart.reduce((prev, current) => {
                           if (current.content.discount !== null) {
-                            return (
-                              prev +
-                              current.content.price *
-                                current.content.discount.percent *
-                                current.quantity
-                            );
+                            if (current.content.discount.isActive === 1) {
+                              return (
+                                prev +
+                                current.content.price *
+                                  (1 - current.content.discount.percent) *
+                                  current.quantity
+                              );
+                            }
                           }
                           return prev + current.content.price * current.quantity;
                         }, 0)

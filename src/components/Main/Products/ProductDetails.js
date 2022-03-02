@@ -169,17 +169,25 @@ const ProductDetails = (props) => {
                 </span>
               </div>
               <div className="P-details-right__price">
-                <span className="P-details-right__price-current">
-                  {dataProduct.discount !== null
-                    ? formatter.format(dataProduct.price * dataProduct.discount.percent)
-                    : formatter.format(dataProduct.price)}
-                </span>
                 {dataProduct.discount !== null ? (
-                  <span className="P-details-right__price-old">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span className="P-details-right__price-current">
+                      {dataProduct.discount.isActive === 1
+                        ? formatter.format(
+                            dataProduct.price * (1 - dataProduct.discount.percent)
+                          )
+                        : formatter.format(dataProduct.price)}
+                    </span>
+                    {dataProduct.discount.isActive === 1 && (
+                      <span className="P-details-right__price-old">
+                        {formatter.format(dataProduct.price)}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="P-details-right__price-current">
                     {formatter.format(dataProduct.price)}
                   </span>
-                ) : (
-                  ''
                 )}
               </div>
               <div className="P-details-right__select-swatches">

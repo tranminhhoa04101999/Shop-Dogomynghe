@@ -115,11 +115,17 @@ const SliderSaleProdut = (props) => {
                         {formatter.format(item.price)}
                       </span>
                     )}
-                    <span className="products-item__price-current">
-                      {item.discount !== null
-                        ? formatter.format(item.price * item.discount.percent)
-                        : formatter.format(item.price)}
-                    </span>
+                    {item.discount !== null ? (
+                      <span className="products-item__price-current">
+                        {item.discount.isActive === 1
+                          ? formatter.format(item.price * (1 - item.discount.percent))
+                          : formatter.format(item.price)}
+                      </span>
+                    ) : (
+                      <span className="products-item__price-current">
+                        {formatter.format(item.price)}
+                      </span>
+                    )}
                   </div>
                 </NavLink>
               </div>

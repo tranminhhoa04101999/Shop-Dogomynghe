@@ -217,6 +217,14 @@ const Product = () => {
       .then((data) => {
         setDataProductDefault(data.content);
         setDataPage(data);
+        if (data.content.length === 0) {
+          // nếu không có thì lấy 5 sản phẩm trong sản phẩm
+          fetch(`${LINKCONNECT_BASE}/allproduct`)
+            .then((response) => response.json())
+            .then((data) => {
+              setDataProductDefault(data.slice(0, 5));
+            });
+        }
       });
   };
   const saleProdHandler = () => {
@@ -284,6 +292,7 @@ const Product = () => {
           <div className="home-product">
             <div className="row sm-gutter">
               {dataProductDefault.map((item) => {
+                // console.log('dataNew', dataNewProd);
                 let imgName = getImageProductHandler({ idProduct: item.idProduct });
                 let checkNew = dataNewProd.findIndex(
                   (prod) => prod.idProduct === item.idProduct
@@ -303,16 +312,26 @@ const Product = () => {
                       ></div>
                       <h4 className="home-product-item__name">{item.nameProduct}</h4>
                       <div className="home-product-item__price">
-                        {item.discount !== null && (
-                          <span className="home-product-item__price-old">
+                        {item.discount !== null ? (
+                          <div style={{ display: 'flex' }}>
+                            {item.discount.isActive === 1 && (
+                              <span className="home-product-item__price-old">
+                                {formatter.format(item.price)}
+                              </span>
+                            )}
+                            <span className="home-product-item__price-current">
+                              {item.discount.isActive === 1
+                                ? formatter.format(
+                                    item.price * (1 - item.discount.percent)
+                                  )
+                                : formatter.format(item.price)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="home-product-item__price-current">
                             {formatter.format(item.price)}
                           </span>
                         )}
-                        <span className="home-product-item__price-current">
-                          {item.discount !== null
-                            ? formatter.format(item.price * item.discount.percent)
-                            : formatter.format(item.price)}
-                        </span>
                       </div>
                       <div className="home-product-item__action">
                         <span className="home-product-item__like home-product-item__like--liked">
@@ -343,11 +362,17 @@ const Product = () => {
                         ''
                       )}
                       {item.discount !== null && (
-                        <div className="home-product-item__sale-off">
-                          <span className="home-product-item__sale-off-precent">
-                            {item.discount.percent * 100}%
-                          </span>
-                          <span className="home-product-item__sale-off-label">GIẢM</span>
+                        <div>
+                          {item.discount.isActive === 1 && (
+                            <div className="home-product-item__sale-off">
+                              <span className="home-product-item__sale-off-precent">
+                                {item.discount.percent * 100}%
+                              </span>
+                              <span className="home-product-item__sale-off-label">
+                                GIẢM
+                              </span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </NavLink>

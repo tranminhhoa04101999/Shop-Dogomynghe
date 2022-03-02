@@ -94,6 +94,7 @@ const SliderNewProduct = (props) => {
     prevArrow: <PrevArrow />,
   };
   //#endregion
+
   return (
     <div className="grid wide">
       <div className="products">
@@ -121,16 +122,24 @@ const SliderNewProduct = (props) => {
                   />
                   <div className="products-item__price">
                     <span className="products-item__title">{item.nameProduct}</span>
-                    {item.discount !== null && (
-                      <span className="products-item__price-old">
+                    {item.discount !== null ? (
+                      <div style={{ display: 'flex' }}>
+                        {item.discount.isActive === 1 && (
+                          <span className="products-item__price-old">
+                            {formatter.format(item.price)}
+                          </span>
+                        )}
+                        <span className="products-item__price-current">
+                          {item.discount.isActive === 1
+                            ? formatter.format(item.price * (1 - item.discount.percent))
+                            : formatter.format(item.price)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="products-item__price-current">
                         {formatter.format(item.price)}
                       </span>
                     )}
-                    <span className="products-item__price-current">
-                      {item.discount !== null
-                        ? formatter.format(item.price * item.discount.percent)
-                        : formatter.format(item.price)}
-                    </span>
                   </div>
                 </NavLink>
               </div>
