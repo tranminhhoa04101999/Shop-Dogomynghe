@@ -117,6 +117,11 @@ const Login = (props) => {
                 Đăng Ký
               </NavLink>
             </div>
+            <div className="login-main__login-link-wrap">
+              <NavLink to="/forgotPassword" className="login-main__login-link">
+                quên mật khẩu
+              </NavLink>
+            </div>
           </div>
           <div className="col l-3"></div>
         </div>

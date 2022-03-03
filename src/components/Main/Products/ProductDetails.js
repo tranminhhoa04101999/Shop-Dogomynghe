@@ -219,15 +219,28 @@ const ProductDetails = (props) => {
                   onClick={addQuantityAddHandler}
                 />
               </div>
-              <div className="P-details-right__wrap-addcart">
-                <button
-                  className="P-details-right__addcart"
-                  onClick={() => addCartHandler()}
-                >
-                  Thêm Vào Giỏ
-                </button>
-                <button className="P-details-right__addcart">Mua Ngay</button>
-              </div>
+              {dataProduct.isActive === 1 ? (
+                <div>
+                  {dataProduct.quantity !== 0 ? (
+                    <div className="P-details-right__wrap-addcart">
+                      <button
+                        className="P-details-right__addcart"
+                        onClick={() => addCartHandler()}
+                      >
+                        Thêm Vào Giỏ
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="P-details-right__wrap-addcart">
+                      <button className="P-details-right__addcart">Tạm hết hàng</button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="P-details-right__wrap-addcart">
+                  <button className="P-details-right__addcart">Ngừng kinh doanh</button>
+                </div>
+              )}
               <div className="P-details-right__wrap-description">
                 <p className="P-details-right__des-title">Thông tin bảo hành: </p>
                 <p className="P-details-right__des-text">

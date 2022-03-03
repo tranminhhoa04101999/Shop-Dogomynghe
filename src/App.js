@@ -14,6 +14,7 @@ import Product from './components/Main/Products/Product';
 import SearchOrder from './components/Main/Order/SearchOrder';
 import OrderHistory from './components/Main/Account/OrderHistory';
 import UpdatePassword from './components/Main/Account/UpdatePassword';
+import ForgotPassword from './components/Main/Account/ForgotPassword';
 
 export const LINKCONNECT_BASE = 'http://localhost:8080';
 export const LINKIMG_BASE =
@@ -31,6 +32,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/account" element={<Account />}>
           <Route path="address" element={<AccoutAddress />} />
           <Route path="orderHistory" element={<OrderHistory />} />

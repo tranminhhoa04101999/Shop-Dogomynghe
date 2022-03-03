@@ -484,6 +484,10 @@ const Cart = (props) => {
                     : 0}
                 </span>
               </div>
+              <div style={{ fontSize: '1.4rem', marginTop: '20px' }}>
+                Thanh toán khi giao hàng, tiền ship sẽ được nhân viên liên hệ lại.
+              </div>
+
               <div className="cart-right__wrap-checkout">
                 <div className="cart-right__checkout" onClick={() => orderHandler()}>
                   <span className="cart-right__checkout-text">Đặt hàng</span>
