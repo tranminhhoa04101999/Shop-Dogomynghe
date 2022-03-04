@@ -70,6 +70,7 @@ const OrderHistory = () => {
   const [dataRateCurrent, setDataRateCurrent] = useState(null);
   const [dataRateAdd, setDataRateAdd] = useState([INITIAL_RATEADD]);
   const [loading, setloading] = useState(false);
+  const [checkListRated, setcheckListRated] = useState([]);
   useEffect(() => {
     if (dataLogined !== null) {
       fetch(
@@ -77,8 +78,18 @@ const OrderHistory = () => {
       )
         .then((response) => response.json())
         .then((data) => setDataOrder(data));
+      fetch(
+        `${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${dataLogined.idAccount}`
+      )
+        .then((response) => response.json())
+        .then((data) =>
+          fetch(`${LINKCONNECT_BASE}/orderCheckRate?idCustomer=${data.idCustomer}`)
+            .then((response1) => response1.json())
+            .then((data1) => setcheckListRated(data1))
+        );
     }
   }, []);
+
   const openNotificationWithIcon = (props) => {
     notification[props.type]({
       message: props.message,
@@ -216,19 +227,23 @@ const OrderHistory = () => {
                     )}
                     {itemOrder.orders.status.idStatus === 5 && (
                       <div>
-                        <Button
-                          type="primary"
-                          danger
-                          onClick={() =>
-                            btnRateHandler({
-                              idOrder: itemOrder.orders.idOrder,
-                              productList: itemOrder.productSearchResponses,
-                              customer: itemOrder.orders.customer,
-                            })
-                          }
-                        >
-                          <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
-                        </Button>
+                        {checkListRated.findIndex(
+                          (itemCheck) => itemOrder.orders.idOrder === itemCheck
+                        ) === -1 && (
+                          <Button
+                            type="primary"
+                            danger
+                            onClick={() =>
+                              btnRateHandler({
+                                idOrder: itemOrder.orders.idOrder,
+                                productList: itemOrder.productSearchResponses,
+                                customer: itemOrder.orders.customer,
+                              })
+                            }
+                          >
+                            <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -339,19 +354,23 @@ const OrderHistory = () => {
                       )}
                       {itemOrder.orders.status.idStatus === 5 && (
                         <div>
-                          <Button
-                            type="primary"
-                            danger
-                            onClick={() =>
-                              btnRateHandler({
-                                idOrder: itemOrder.orders.idOrder,
-                                productList: itemOrder.productSearchResponses,
-                                customer: itemOrder.orders.customer,
-                              })
-                            }
-                          >
-                            <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
-                          </Button>
+                          {checkListRated.findIndex(
+                            (itemCheck) => itemOrder.orders.idOrder === itemCheck
+                          ) === -1 && (
+                            <Button
+                              type="primary"
+                              danger
+                              onClick={() =>
+                                btnRateHandler({
+                                  idOrder: itemOrder.orders.idOrder,
+                                  productList: itemOrder.productSearchResponses,
+                                  customer: itemOrder.orders.customer,
+                                })
+                              }
+                            >
+                              <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
+                            </Button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -410,6 +429,68 @@ const OrderHistory = () => {
 
   const btnSubmitRateHandler = () => {
     console.log('dataRateAdd', dataRateAdd);
+    let checkEmpty = false;
+    dataRateAdd.map((item) => {
+      if (item.descRate === '') {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Không được để trống lời bình của đánh giá',
+        });
+        checkEmpty = true;
+      } else if (item.pointRate === 0) {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Vui lòng vote điểm',
+        });
+        checkEmpty = true;
+      }
+    });
+    if (!checkEmpty) {
+      fetch(`${LINKCONNECT_BASE}/saveRatesProduct`, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          Accepts: '*/*',
+
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(dataRateAdd),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.idResult === 1) {
+            openNotificationWithIcon({
+              type: 'success',
+              message: data.message,
+              desc: '',
+            });
+            window.location.reload(false);
+          } else if (data.idResult === 0) {
+            openNotificationWithIcon({
+              type: 'error',
+              message: data.message,
+              desc: '',
+            });
+          }
+        })
+        .catch((error) => {
+          openNotificationWithIcon({
+            type: 'error',
+            message: 'Đánh giá thất bại catch',
+            desc: error,
+          });
+        });
+    } else {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Vui lòng điền đủ thông tin!',
+      });
+    }
   };
   const inputRateOnchangeHandler = (props) => {
     let data = dataRateAdd;
@@ -418,6 +499,7 @@ const OrderHistory = () => {
     );
     setDataRateAdd(data);
   };
+  console.log('data', dataRateAdd);
 
   return (
     <div>
