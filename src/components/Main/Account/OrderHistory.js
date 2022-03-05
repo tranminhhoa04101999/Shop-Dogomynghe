@@ -141,6 +141,7 @@ const OrderHistory = () => {
     setloading(false);
   };
   const btnRateHandler = (props) => {
+    console.log('props.idOrder', props.idOrder);
     setDataRateCurrent({
       idOrder: props.idOrder,
       productSearchResponses: props.productList,

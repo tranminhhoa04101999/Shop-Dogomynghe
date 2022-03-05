@@ -1,17 +1,26 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-regular-svg-icons';
-import { faFeatherAlt } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
-import { notification } from 'antd';
+import { notification, Card } from 'antd';
+import Rating from 'react-rating';
+import { faStar as faStarEm } from '@fortawesome/free-regular-svg-icons';
+
+const styleGrid = {
+  width: 'calc(100% /3)',
+  padding: '10px 10px',
+  borderRadius: '4px',
+  margin: '8px 0',
+};
 
 const ProductDetails = (props) => {
   const [imgProduct, setImgProduct] = useState([]);
   const [listIdProd, setListIdProd] = useState([]);
   const [imgMain, setImgMain] = useState();
   const [quantityAddCart, setQuantityAddCart] = useState(1);
+  const [rateDetail, setRateDetail] = useState(null);
   const [dataProduct, setDataProduct] = useState({
     idProduct: 0,
     nameProduct: '',
@@ -48,7 +57,7 @@ const ProductDetails = (props) => {
     if (state === null) {
       navigate('/product');
     } else {
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
       // set hinh mac dinh cho imgImain
       fetch(`${LINKCONNECT_BASE}/imgproductwith?idProduct=${state.idProduct}`)
         .then((response) => response.json())
@@ -70,6 +79,9 @@ const ProductDetails = (props) => {
       } else {
         setListIdProd(dataLocal);
       }
+      fetch(`${LINKCONNECT_BASE}/rateDetails?idProduct=${state.idProduct}`)
+        .then((response) => response.json())
+        .then((data) => setRateDetail(data));
     }
   }, []);
 
@@ -257,41 +269,138 @@ const ProductDetails = (props) => {
             </div>
           </div>
         </div>
-        <div className="wrap-product-star-reviews">
-          <div className="wrap-star-reviews">
-            <h2 className="product-star__title">Đánh giá sản phẩm</h2>
-            <div className="product-star__summary">
-              <a href="/" className="product-star__summary-icon">
-                <FontAwesomeIcon icon={faStar} />
-              </a>
-              <a href="/" className="product-star__summary-icon">
-                <FontAwesomeIcon icon={faStar} />
-              </a>
-              <a href="/" className="product-star__summary-icon">
-                <FontAwesomeIcon icon={faStar} />
-              </a>
-              <a href="/" className="product-star__summary-icon">
-                <FontAwesomeIcon icon={faStar} />
-              </a>
-              <a href="/" className="product-star__summary-icon">
-                <FontAwesomeIcon icon={faStar} />
-              </a>
+        {rateDetail !== null && (
+          <div className="row container-rate-header">
+            <div className="col l-3 rate-header-left">
+              <div className="rate-header-left__wrap-total">
+                <p className="rate-header-left__totalPercent">
+                  {rateDetail.percentTotal}
+                </p>
+                <FontAwesomeIcon icon={faStar} size="3x" color="#ffb92e" />
+              </div>
+              <div className="rate-header-left__title">
+                {rateDetail.totalRate} đánh giá
+              </div>
             </div>
-            <div className="product-star__summary-text">Dựa trên 0 đánh giá</div>
-            <div className="product-star__write-rev">
-              <FontAwesomeIcon
-                icon={faFeatherAlt}
-                className="product-star__write-rev-icon"
-              />
-              Viết đánh giá
+            <div className="col l-6 rate-header-center">
+              <div className="rate-header-center__wrap">
+                <p className="rate-header-center__title">5</p>
+                <FontAwesomeIcon icon={faStar} size="lg" color="#ffb92e" />
+                <div className="rate-header-center__loading">
+                  <div
+                    className="rate-header-center__loading-color"
+                    style={{
+                      width: `calc((100% / ${rateDetail.totalRate})*${rateDetail.five})`,
+                    }}
+                  >
+                    .
+                  </div>
+                </div>
+                <p className="rate-header-center__title">{rateDetail.five}</p>
+                <p className="rate-header-center__title">đánh giá</p>
+              </div>
+              <div className="rate-header-center__wrap">
+                <p className="rate-header-center__title">4</p>
+                <FontAwesomeIcon icon={faStar} size="lg" color="#ffb92e" />
+                <div className="rate-header-center__loading">
+                  <div
+                    className="rate-header-center__loading-color"
+                    style={{
+                      width: `calc((100% / ${rateDetail.totalRate})*${rateDetail.four})`,
+                    }}
+                  >
+                    .
+                  </div>
+                </div>
+                <p className="rate-header-center__title">{rateDetail.four}</p>
+                <p className="rate-header-center__title">đánh giá</p>
+              </div>
+              <div className="rate-header-center__wrap">
+                <p className="rate-header-center__title">3</p>
+                <FontAwesomeIcon icon={faStar} size="lg" color="#ffb92e" />
+                <div className="rate-header-center__loading">
+                  <div
+                    className="rate-header-center__loading-color"
+                    style={{
+                      width: `calc((100% / ${rateDetail.totalRate})*${rateDetail.three})`,
+                    }}
+                  >
+                    .
+                  </div>
+                </div>
+                <p className="rate-header-center__title">{rateDetail.three}</p>
+                <p className="rate-header-center__title">đánh giá</p>
+              </div>
+              <div className="rate-header-center__wrap">
+                <p className="rate-header-center__title">2</p>
+                <FontAwesomeIcon icon={faStar} size="lg" color="#ffb92e" />
+                <div className="rate-header-center__loading">
+                  <div
+                    className="rate-header-center__loading-color"
+                    style={{
+                      width: `calc((100% / ${rateDetail.totalRate})*${rateDetail.two})`,
+                    }}
+                  >
+                    .
+                  </div>
+                </div>
+                <p className="rate-header-center__title">{rateDetail.two}</p>
+                <p className="rate-header-center__title">đánh giá</p>
+              </div>
+              <div className="rate-header-center__wrap">
+                <p className="rate-header-center__title">1</p>
+                <FontAwesomeIcon icon={faStar} size="lg" color="#ffb92e" />
+                <div className="rate-header-center__loading">
+                  <div
+                    className="rate-header-center__loading-color"
+                    style={{
+                      width: `calc((100% / ${rateDetail.totalRate})*${rateDetail.one})`,
+                    }}
+                  >
+                    .
+                  </div>
+                </div>
+                <p className="rate-header-center__title">{rateDetail.one}</p>
+                <p className="rate-header-center__title">đánh giá</p>
+              </div>
             </div>
+            <div className="col l-3"></div>
           </div>
-          <div className="wrap-cmt-reviews">
-            <span className="cmt-reviews__label">
-              Đánh giá
-              <span className="cmt-reviews__count">0</span>
-            </span>
-          </div>
+        )}
+        <div className="row ">
+          {rateDetail !== null && (
+            <div className="col l-12 container-rate">
+              <Card>
+                {rateDetail.ratesProductList.map((item, index) => (
+                  <Card.Grid key={index} style={styleGrid}>
+                    <div className="rate-card__wrapName">
+                      <p className="rate-card__name">{item.nameCustomer}</p>
+                      <p className="rate-card__timed"> {item.timeUsed}</p>
+                    </div>
+                    <Rating
+                      initialRating={item.pointRate}
+                      emptySymbol={
+                        <FontAwesomeIcon
+                          icon={faStarEm}
+                          size="2x"
+                          style={{ color: '#ffb92e' }}
+                        />
+                      }
+                      fullSymbol={
+                        <FontAwesomeIcon
+                          icon={faStar}
+                          size="2x"
+                          style={{ color: '#ffc31a ' }}
+                        />
+                      }
+                      readonly={true}
+                    />
+                    <div className="rate-card__desc">{item.descRate}</div>
+                  </Card.Grid>
+                ))}
+              </Card>
+            </div>
+          )}
         </div>
       </div>
       <Outlet />
