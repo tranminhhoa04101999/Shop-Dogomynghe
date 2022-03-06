@@ -33,23 +33,26 @@ const Categories = (props) => {
           Xem Tất Cả Sản Phẩm
         </NavLink>
         <div className="row sm-gutter">
-          {dataCategory.map((item) => (
-            <div
-              key={item.idCategory}
-              className="col l-1-5 "
-              onClick={() => onClickHandler({ idCategory: item.idCategory })}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="categories-item">
-                <img
-                  src={`${LINKIMG_BASE}${item.imgURL}.jpg?alt=media`}
-                  alt=""
-                  className="categories-img"
-                />
-                <span className="categories-label">{item.name}</span>
-              </div>
-            </div>
-          ))}
+          {dataCategory.map(
+            (item) =>
+              item.isActive === 1 && (
+                <div
+                  key={item.idCategory}
+                  className="col l-1-5 "
+                  onClick={() => onClickHandler({ idCategory: item.idCategory })}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="categories-item">
+                    <img
+                      src={`${LINKIMG_BASE}${item.imgURL}.jpg?alt=media`}
+                      alt=""
+                      className="categories-img"
+                    />
+                    <span className="categories-label">{item.name}</span>
+                  </div>
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>

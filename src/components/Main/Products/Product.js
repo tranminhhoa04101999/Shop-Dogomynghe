@@ -273,18 +273,24 @@ const Product = () => {
               Loại sản phẩm
             </h3>
             <ul className="category-list">
-              {dataCategory.map((item) => (
-                <li key={item.idCategory} className="category-item category-item--active">
-                  <div
-                    className="category-item__link"
-                    onClick={() =>
-                      categoryOnClickHandler({ idCategory: item.idCategory })
-                    }
-                  >
-                    {item.name}
-                  </div>
-                </li>
-              ))}
+              {dataCategory.map(
+                (item) =>
+                  item.isActive === 1 && (
+                    <li
+                      key={item.idCategory}
+                      className="category-item category-item--active"
+                    >
+                      <div
+                        className="category-item__link"
+                        onClick={() =>
+                          categoryOnClickHandler({ idCategory: item.idCategory })
+                        }
+                      >
+                        {item.name}
+                      </div>
+                    </li>
+                  )
+              )}
             </ul>
           </nav>
         </div>

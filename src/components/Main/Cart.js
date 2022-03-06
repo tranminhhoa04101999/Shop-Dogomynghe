@@ -53,7 +53,11 @@ const Cart = (props) => {
               .then((data1) =>
                 setDataProdCart((prev) => [
                   ...prev,
-                  { content: data, quantity: item.quantity, imgName: data1[0].imgURL },
+                  {
+                    content: data,
+                    quantity: item.quantity,
+                    imgName: data1.length !== 0 ? data1[0].imgURL : 'defaultImage',
+                  },
                 ])
               );
           })

@@ -144,11 +144,13 @@
   left: -197px;
   right: 0;
   background-color: #fff;
-  height: 490px;
+  min-height: 300px;
   min-width: 1200px;
   z-index: 9;
   border-top: 1px solid var(--primary-color-red);
   display: none;
+  box-shadow: 0 0 10px #999;
+  border-radius: 8px;
 }
 .header-nav__item-show-navProduct:hover .header-product {
   display: block;

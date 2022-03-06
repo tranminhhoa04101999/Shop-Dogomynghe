@@ -57,13 +57,18 @@ const ProductDetails = (props) => {
     if (state === null) {
       navigate('/product');
     } else {
-      // window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
       // set hinh mac dinh cho imgImain
       fetch(`${LINKCONNECT_BASE}/imgproductwith?idProduct=${state.idProduct}`)
         .then((response) => response.json())
         .then((data) => {
           setImgProduct(data);
-          setImgMain(`${LINKIMG_BASE}${data[0].imgURL}.jpg?alt=media`);
+          console.log('data', data);
+          setImgMain(
+            `${LINKIMG_BASE}${
+              data.length !== 0 ? data[0].imgURL : 'defaultImage'
+            }.jpg?alt=media`
+          );
         });
       //lấy thông tin product
       fetch(`${LINKCONNECT_BASE}/getproductbyid?idProduct=${state.idProduct}`)
@@ -274,7 +279,7 @@ const ProductDetails = (props) => {
             <div className="col l-3 rate-header-left">
               <div className="rate-header-left__wrap-total">
                 <p className="rate-header-left__totalPercent">
-                  {rateDetail.percentTotal}
+                  {rateDetail.percentTotal.toFixed(1)}
                 </p>
                 <FontAwesomeIcon icon={faStar} size="3x" color="#ffb92e" />
               </div>

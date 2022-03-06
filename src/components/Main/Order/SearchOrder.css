@@ -1,6 +1,8 @@
 .wapper-searchOrder {
   margin-top: var(--header-height);
 }
+.wapper-searchOrder-item {
+}
 .grid.wide.container-searchOrder {
   padding-bottom: 100px;
 }
@@ -35,8 +37,8 @@
   font-size: 1.4rem;
 }
 /* cart table */
-.cart-table {
-  width: 900px;
+.cart-table-search {
+  width: 100%;
 }
 .cart-table-tr-header {
   border-bottom: 2px solid #dbd8cb;
@@ -160,4 +162,16 @@
   font-size: 1.4rem;
   color: var(--primary-color);
   margin: 0 10px;
+}
+.searchOrder-totalprice {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  margin-top: 10px;
+}
+.searchOrder-totalprice-num {
+  margin-bottom: 0;
+  font-size: 1.6rem;
+  color: var(--primary-color);
+  margin-left: 10px;
 }

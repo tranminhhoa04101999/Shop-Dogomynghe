@@ -63,6 +63,7 @@ const SearchOrder = () => {
       .then((response) => response.json())
       .then((data) => {
         setDataOrder(data);
+        console.log('da', data);
       });
   };
 
@@ -84,7 +85,7 @@ const SearchOrder = () => {
       </div>
       {dataOrder.map((itemDataOrder, indexDataOrder) => (
         <div key={indexDataOrder}>
-          <div className="row wapper-searchOrder ">
+          <div className="row wapper-searchOrder-item ">
             <div className="col l-3"></div>
             <div className="col l-9 container-searchOrder-col-top">
               <div className="row wapper-searchorder-main-left">
@@ -99,6 +100,9 @@ const SearchOrder = () => {
                   <p className="searchorder-main-left_address">
                     Địa chỉ : {itemDataOrder.orders.address}
                   </p>
+                  <p className="searchorder-main-left_address">
+                    Mã đơn hàng : {itemDataOrder.orders.idOrder}
+                  </p>
                 </div>
                 <div className="col l-8 ">
                   <div className="searchOrder-Status">
@@ -107,15 +111,21 @@ const SearchOrder = () => {
                       {itemDataOrder.orders.status.statusName}
                     </div>
                   </div>
+                  <div className="searchOrder-totalprice">
+                    Tổng tiền đơn hàng:{' '}
+                    <p className="searchOrder-totalprice-num">
+                      {formatter.format(itemDataOrder.orders.total)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="row wapper-searchOrder">
+          <div className="row wapper-searchOrder-item">
             <div className="col l-3"></div>
             <div className="col l-9 container-searchOrder-col-bottom">
-              <table className="cart-table">
+              <table className="cart-table-search">
                 <thead></thead>
                 <tbody className="searchOrderTable-body">
                   {itemDataOrder.productSearchResponses.map((itemProd, indexProd) => (
@@ -135,11 +145,10 @@ const SearchOrder = () => {
                       </td>
                       <td className="cart-table__wrap-price">
                         <div className="cart-table__wrap-price-old">
-                          {formatter.format(itemProd.price)}
+                          Giá mỗi món: {formatter.format(itemProd.price)}
                         </div>
                         <div className="cart-table__wrap-price-total">
-                          Tổng tiền:{' '}
-                          {formatter.format(itemProd.price * itemProd.quantity)}
+                          Tổng: {formatter.format(itemProd.price * itemProd.quantity)}
                         </div>
                       </td>
                     </tr>

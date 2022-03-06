@@ -61,11 +61,11 @@ const Register = (props) => {
         desc: 'Vui lòng điền SĐT',
       });
       return;
-    } else if (dataCustomer.phone.length + 1 <= 10) {
+    } else if (!/((09|03|07|08|05)+([0-9]{8})\b)/g.test(dataCustomer.phone)) {
       openNotificationWithIcon({
         type: 'warning',
-        message: 'SĐT chưa đúng',
-        desc: 'SĐT phải nhiều hơn 9 số',
+        message: 'SĐT không đúng định dạng',
+        desc: 'SĐT phải 10 số hoặc các đầu số đúng',
       });
       return;
     } else if (dataCustomer.address === '') {
@@ -89,11 +89,18 @@ const Register = (props) => {
         desc: 'Vui lòng điền lại email',
       });
       return;
-    } else if (dataAccount.password === '') {
+    } else if (dataAccount.password.trim() === '') {
       openNotificationWithIcon({
         type: 'warning',
         message: 'Mật khẩu trống',
         desc: 'Vui lòng điền mật khẩu',
+      });
+      return;
+    } else if (dataAccount.password.trim().indexOf(' ') >= 0) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Mật khẩu lỗi',
+        desc: 'mật khẩu không được chưa khoảng trắng',
       });
       return;
     } else if (dataAccount.password.length <= 5) {
@@ -216,14 +223,14 @@ const Register = (props) => {
               <input
                 type="password"
                 className="register-main__input"
-                placeholder="Mật khẩu* (tối thiểu 5 ký tự)"
+                placeholder="Mật khẩu* (tối thiểu 6 ký tự)"
                 onChange={(event) => passwordOnchange({ value: event.target.value })}
                 value={dataAccount.password}
               />
               <input
                 type="password"
                 className="register-main__input"
-                placeholder="Nhập lại mật khẩu* (tối thiểu 5 ký tự)"
+                placeholder="Nhập lại mật khẩu* (tối thiểu 6 ký tự)"
                 onChange={(event) => passwordCheckOnchange({ value: event.target.value })}
                 value={passwordCheck}
               />

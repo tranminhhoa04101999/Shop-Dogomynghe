@@ -99,7 +99,7 @@ const NavBar = (props) => {
                           </NavLink>
                         </div>
                       </div>
-                      <div className="col l-2">
+                      {/* <div className="col l-2">
                         <div className="header-product__item-text">
                           <span className="header-product__item-text-title">Ưu đãi</span>
                           <ul className="header-product__item-text-list">
@@ -115,27 +115,30 @@ const NavBar = (props) => {
                             </li>
                           </ul>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col l-2 border-right-left">
                         <div className="header-product__item-text">
                           <span className="header-product__item-text-title">
                             Đồ gỗ mỹ nghệ
                           </span>
                           <ul className="header-product__item-text-list">
-                            {dataCategory.map((item) => (
-                              <li
-                                key={item.idCategory}
-                                className="header-product__item-text-item"
-                              >
-                                <NavLink
-                                  to="/product"
-                                  className="header-product__item-text-link"
-                                  state={{ idCategory: item.idCategory }}
-                                >
-                                  {item.name}
-                                </NavLink>
-                              </li>
-                            ))}
+                            {dataCategory.map(
+                              (item) =>
+                                item.isActive === 1 && (
+                                  <li
+                                    key={item.idCategory}
+                                    className="header-product__item-text-item"
+                                  >
+                                    <NavLink
+                                      to="/product"
+                                      className="header-product__item-text-link"
+                                      state={{ idCategory: item.idCategory }}
+                                    >
+                                      {item.name}
+                                    </NavLink>
+                                  </li>
+                                )
+                            )}
                           </ul>
                         </div>
                       </div>
