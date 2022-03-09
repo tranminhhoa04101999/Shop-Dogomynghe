@@ -175,6 +175,9 @@ const OrderHistory = () => {
                     <div className="history-address">
                       <span className="history-address__title">Thông tin giao hàng</span>
                       <span className="history-address__content">
+                        Mã đơn hàng: <p>{itemOrder.orders.idOrder}</p>
+                      </span>
+                      <span className="history-address__content">
                         Tên: <p>{itemOrder.orders.customer.name}</p>
                       </span>
                       <span className="history-address__content">
@@ -182,6 +185,9 @@ const OrderHistory = () => {
                       </span>
                       <span className="history-address__content">
                         Địa chỉ: <p>{itemOrder.orders.address}</p>
+                      </span>
+                      <span className="history-address__content">
+                        Lưu ý: <p>{itemOrder.orders.note}</p>
                       </span>
                     </div>
 
@@ -302,6 +308,9 @@ const OrderHistory = () => {
                           Thông tin giao hàng
                         </span>
                         <span className="history-address__content">
+                          Mã đơn hàng: <p>{itemOrder.orders.idOrder}</p>
+                        </span>
+                        <span className="history-address__content">
                           Tên: <p>{itemOrder.orders.customer.name}</p>
                         </span>
                         <span className="history-address__content">
@@ -309,6 +318,9 @@ const OrderHistory = () => {
                         </span>
                         <span className="history-address__content">
                           Địa chỉ: <p>{itemOrder.orders.address}</p>
+                        </span>
+                        <span className="history-address__content">
+                          Lưu ý: <p>{itemOrder.orders.note}</p>
                         </span>
                       </div>
 

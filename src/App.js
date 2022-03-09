@@ -19,6 +19,7 @@ import ForgotPassword from './components/Main/Account/ForgotPassword';
 export const LINKCONNECT_BASE = 'http://localhost:8080';
 export const LINKIMG_BASE =
   'https://firebasestorage.googleapis.com/v0/b/image-kddgmn-52ebf.appspot.com/o/images%2F';
+export const LINKAPI_ADDRESS = 'https://provinces.open-api.vn/api/?depth=3';
 
 function App() {
   const clgReload = () => {

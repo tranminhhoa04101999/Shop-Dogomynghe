@@ -1,9 +1,9 @@
 import './Cart.css';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Input, Space, Image, notification } from 'antd';
+import { Input, Space, Image, notification, Select } from 'antd';
 import { useState, useEffect } from 'react';
-import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
+import { LINKAPI_ADDRESS, LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
 
 const INITIAL_INFOORDERS = {
   phone: '',
@@ -28,6 +28,12 @@ const Cart = (props) => {
   const [dataInfoOrder, setDataInfoOrder] = useState(INITIAL_INFOORDERS);
   const [name, setName] = useState('');
   const [dataCustomer, setDataCustomer] = useState(null);
+  const [dataAddress, setDataAddress] = useState(null);
+  const [addressChoose, setAddressChoose] = useState({
+    tinh: null,
+    huyen: null,
+    xa: null,
+  });
   const dataCartLocal = JSON.parse(localStorage.getItem('cartListId'));
   const dataLogined = JSON.parse(localStorage.getItem('infoLogined'));
 
@@ -42,6 +48,8 @@ const Cart = (props) => {
       description: props.desc,
     });
   };
+  const { Option } = Select;
+
   useEffect(() => {
     if (dataCartLocal !== null) {
       dataCartLocal.map((item) =>
@@ -75,9 +83,17 @@ const Cart = (props) => {
             setName(data.name);
           });
       }
+      fetch(`${LINKAPI_ADDRESS}`)
+        .then((response) => response.json())
+        .then((data) => setDataAddress(data));
     }
     return () => {
       setDataProdCart([]);
+      setAddressChoose({
+        tinh: null,
+        huyen: null,
+        xa: null,
+      });
     };
   }, []);
 
@@ -171,11 +187,29 @@ const Cart = (props) => {
         desc: 'Vui lòng điền họ tên',
       });
       return;
+    } else if (addressChoose.tinh === null) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Vui lòng chọn tỉnh',
+      });
+      return;
+    } else if (addressChoose.huyen === null) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Vui lòng chọn huyện',
+      });
+      return;
+    } else if (addressChoose.xa === null) {
+      openNotificationWithIcon({
+        type: 'warning',
+        message: 'Vui lòng chọn xã',
+      });
+      return;
     } else if (dataInfoOrder.address === '') {
       openNotificationWithIcon({
         type: 'warning',
-        message: 'Địa chỉ trống',
-        desc: 'Vui lòng điền địa chỉ',
+        message: 'Địa chỉ chi tiết trống',
+        desc: 'Vui lòng điền địa chỉ chi tiết',
       });
       return;
     }
@@ -208,6 +242,7 @@ const Cart = (props) => {
     if (dataCustomer !== null) {
       dataOrderAdd.customer.idCustomer = dataCustomer.idCustomer;
     }
+    dataOrderAdd.address = `${addressChoose.tinh.name}, ${addressChoose.huyen.name}, ${addressChoose.xa.name},${dataOrderAdd.address}`;
     // kiểm tra còn hàng không trước khi đặt
     var dataResult = [];
     await fetch(`${LINKCONNECT_BASE}/checkQuantityProduct`, {
@@ -327,6 +362,21 @@ const Cart = (props) => {
     window.location.reload(false);
   };
 
+  const onChangeSelect = (value) => {
+    const index = dataAddress.findIndex((item) => item.code === value);
+    setAddressChoose((prev) => ({ ...prev, tinh: dataAddress[index] }));
+  };
+  const onSearchSelect = (value) => {};
+  const onChangeSelecthuyen = (value) => {
+    const index = addressChoose.tinh.districts.findIndex((item) => item.code === value);
+    setAddressChoose((prev) => ({ ...prev, huyen: addressChoose.tinh.districts[index] }));
+  };
+  const onSearchSelecthuyen = (value) => {};
+  const onChangeSelectxa = (value) => {
+    const index = addressChoose.huyen.wards.findIndex((item) => item.code === value);
+    setAddressChoose((prev) => ({ ...prev, xa: addressChoose.huyen.wards[index] }));
+  };
+  const onSearchSelectxa = (value) => {};
   return (
     <div className="grid wide">
       <div className="cart">
@@ -457,8 +507,87 @@ const Cart = (props) => {
                   onChange={nameOnchange}
                   value={name}
                 />
+                {dataAddress !== null && (
+                  <div className="wrap-select-cart">
+                    <Select
+                      showSearch
+                      placeholder="Chọn Tỉnh"
+                      optionFilterProp="children"
+                      onChange={onChangeSelect}
+                      onSearch={onSearchSelect}
+                      filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      className="select-cart__select"
+                    >
+                      {dataAddress.map((item, index) => {
+                        return (
+                          <Option key={index} value={item.code}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                    {addressChoose.tinh !== null ? (
+                      <div>
+                        {
+                          <Select
+                            showSearch
+                            placeholder="Chọn huyện"
+                            optionFilterProp="children"
+                            onChange={onChangeSelecthuyen}
+                            onSearch={onSearchSelecthuyen}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                            className="select-cart__select"
+                          >
+                            {addressChoose.tinh.districts.map((item, index) => {
+                              return (
+                                <Option key={index} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        }
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                    {addressChoose.huyen !== null && (
+                      <div>
+                        {
+                          <Select
+                            showSearch
+                            placeholder="Chọn xã/phường"
+                            optionFilterProp="children"
+                            onChange={onChangeSelectxa}
+                            onSearch={onSearchSelectxa}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                            className="select-cart__select"
+                          >
+                            {addressChoose.huyen.wards.map((item, index) => {
+                              return (
+                                <Option key={index} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        }
+                      </div>
+                    )}
+                  </div>
+                )}
                 <Input
-                  placeholder="địa chỉ giao hàng"
+                  placeholder="Địa chỉ chi tiết"
                   style={{ width: 400 }}
                   onChange={addressOnchange}
                   value={dataInfoOrder.address}

@@ -207,3 +207,16 @@
   color: #000;
   text-decoration: underline;
 }
+.wrap-select-cart .ant-select-selection-placeholder {
+  font-size: 1.4rem;
+}
+.wrap-select-cart .select-cart__select {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.wrap-select-cart .ant-select-selection-item {
+  font-size: 1.4rem;
+}
+.wrap-select-cart .select-cart__select_2 {
+  width: 50%;
+}

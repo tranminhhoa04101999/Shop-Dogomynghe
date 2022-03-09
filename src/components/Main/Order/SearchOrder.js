@@ -103,6 +103,9 @@ const SearchOrder = () => {
                   <p className="searchorder-main-left_address">
                     Mã đơn hàng : {itemDataOrder.orders.idOrder}
                   </p>
+                  <span className="searchorder-main-left_address">
+                    Lưu ý: {itemDataOrder.orders.note}
+                  </span>
                 </div>
                 <div className="col l-8 ">
                   <div className="searchOrder-Status">
