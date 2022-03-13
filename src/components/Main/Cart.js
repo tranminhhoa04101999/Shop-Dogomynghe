@@ -2,8 +2,10 @@ import './Cart.css';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Input, Space, Image, notification, Select } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { LINKAPI_ADDRESS, LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ContextContainer } from '../Header/Layout';
 
 const INITIAL_INFOORDERS = {
   phone: '',
@@ -134,6 +136,7 @@ const Cart = (props) => {
       setDataProdLocal(dataLocalNew);
       localStorage.setItem('cartListId', JSON.stringify(dataLocalNew));
     }
+    setReloadContext(true);
   };
   const addCountHandler = (props) => {
     setDataProdCart((prevData) =>
@@ -150,6 +153,7 @@ const Cart = (props) => {
 
     setDataProdLocal(dataLocalNew);
     localStorage.setItem('cartListId', JSON.stringify(dataLocalNew));
+    setReloadContext(true);
   };
 
   const nameOnchange = (event) => {
@@ -264,6 +268,7 @@ const Cart = (props) => {
       .then((data) => {
         dataResult = data;
       });
+
     if (dataResult.length === 0) {
       // thêm mới order
       fetch(`${LINKCONNECT_BASE}/saveOrder?name=${name}`, {
@@ -301,7 +306,6 @@ const Cart = (props) => {
             })
               .then((response) => response.json())
               .then((data1) => {
-                console.log('data1', data1);
                 if (data1 === 1) {
                   openNotificationWithIcon({
                     type: 'success',
@@ -341,6 +345,8 @@ const Cart = (props) => {
       });
     }
   };
+  const { setReloadContext } = useContext(ContextContainer);
+
   const removeItem = (props) => {
     const dataNew = dataProdCart;
     const indexCountZero = dataNew.findIndex(
@@ -359,7 +365,7 @@ const Cart = (props) => {
     dataLocalNew.splice(indexCountZeroLocal, 1);
     setDataProdLocal(dataLocalNew);
     localStorage.setItem('cartListId', JSON.stringify(dataLocalNew));
-    window.location.reload(false);
+    setReloadContext(true);
   };
 
   const onChangeSelect = (value) => {
@@ -492,7 +498,7 @@ const Cart = (props) => {
             />
           </div>
           {dataProdCart.length !== 0 ? (
-            <div className="col l-4">
+            <div className="col l-4" style={{ marginBottom: 100 }}>
               <p className="cart-right__title">Thông tin giao hàng</p>
               <Space direction="vertical">
                 <Input
@@ -617,9 +623,7 @@ const Cart = (props) => {
                     : 0}
                 </span>
               </div>
-              <div style={{ fontSize: '1.4rem', marginTop: '20px' }}>
-                Thanh toán khi giao hàng, tiền ship sẽ được nhân viên liên hệ lại.
-              </div>
+              <div className="container-thanhtoanCOD">Thanh toán khi nhận hàng</div>
 
               <div className="cart-right__wrap-checkout">
                 <div className="cart-right__checkout" onClick={() => orderHandler()}>

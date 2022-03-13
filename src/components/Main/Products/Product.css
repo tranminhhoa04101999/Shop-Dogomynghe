@@ -30,6 +30,8 @@
 }
 .category-item--active .category-item__link {
   color: var(--primary-color);
+  font-weight: 500;
+  font-size: 2rem;
 }
 .category-item--active .category-item__link::before {
   content: '';
@@ -216,4 +218,13 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+.container-filterPrice {
+  display: flex;
+  padding: 10px 15px 0px;
+  align-items: center;
+}
+.container-filterPrice p {
+  font-size: 1.5rem;
+  opacity: 0.8;
 }

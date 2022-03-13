@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from './components/Main/Home/HomePage';
@@ -22,11 +22,8 @@ export const LINKIMG_BASE =
 export const LINKAPI_ADDRESS = 'https://provinces.open-api.vn/api/?depth=3';
 
 function App() {
-  const clgReload = () => {
-    // console.log('reload');
-  };
   return (
-    <Layout reload={clgReload}>
+    <Layout>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/HomePage" element={<HomePage />} />
@@ -40,7 +37,7 @@ function App() {
           <Route path="updatePassword" element={<UpdatePassword />} />
         </Route>
         <Route path="/product" element={<Product />}></Route>
-        <Route path="/productDetails" element={<ProductDetails reload={clgReload} />} />
+        <Route path="/productDetails" element={<ProductDetails />} />
         <Route path="/searchOrder" element={<SearchOrder />} />
         <Route path="*" element={<HomePage to="/" replace />} />
       </Routes>

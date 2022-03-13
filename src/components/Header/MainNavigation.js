@@ -4,8 +4,9 @@ import logo from '../../assets/img/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
+import { ContextContainer } from './Layout';
 
 const INITIAL_CATEGORY = {
   idCategory: 0,
@@ -19,16 +20,24 @@ const NavBar = (props) => {
   const [dataCategory, setDataCategory] = useState([INITIAL_CATEGORY]);
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
-  const listIdProdLocal = JSON.parse(localStorage.getItem('cartListId'));
+  const [listIdProdLocal, setlistIdProdLocal] = useState(null);
 
+  const { reloadContext, setReloadContext } = useContext(ContextContainer);
   useEffect(() => {
     // get all category
     fetch(`${LINKCONNECT_BASE}/allcategory`)
       .then((response) => response.json())
       .then((data) => setDataCategory(data));
+
+    setlistIdProdLocal(JSON.parse(localStorage.getItem('cartListId')));
   }, []);
 
-  // useEffect(()=>{},[listIdProdLocal])
+  useEffect(() => {
+    setlistIdProdLocal(JSON.parse(localStorage.getItem('cartListId')));
+    return () => {
+      setReloadContext(false);
+    };
+  }, [reloadContext]);
 
   const inputSearchOnChange = (props) => {
     setSearchText(props.value);
@@ -179,6 +188,7 @@ const NavBar = (props) => {
                 placeholder="Nhập tên sản phẩm"
                 onChange={(event) => inputSearchOnChange({ value: event.target.value })}
                 value={searchText}
+                onKeyUp={(e) => e.key === 'Enter' && searchOnClick()}
               ></input>
               <button
                 className="header-right__search-btn"

@@ -1,12 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './ProductDetails.css';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
 import { notification, Card } from 'antd';
 import Rating from 'react-rating';
 import { faStar as faStarEm } from '@fortawesome/free-regular-svg-icons';
+import { ContextContainer } from '../../Header/Layout';
 
 const styleGrid = {
   width: 'calc(100% /3)',
@@ -107,6 +108,7 @@ const ProductDetails = (props) => {
     localStorage.setItem('cartListId', JSON.stringify(listIdProd));
   }, [listIdProd]);
 
+  const { setReloadContext } = useContext(ContextContainer);
   const addCartHandler = () => {
     //lưu sản phảma vào localstorage
     setListIdProd((prevData) => {
@@ -124,9 +126,8 @@ const ProductDetails = (props) => {
       );
     });
 
-    window.location.reload(false);
-    // props.reload();
-
+    // window.location.reload(false);
+    setReloadContext(true);
     openNotificationWithIcon({
       type: 'success',
       message: 'Thành công',

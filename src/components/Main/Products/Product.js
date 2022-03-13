@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './Product.css';
 import { useEffect, useState } from 'react';
 import { LINKCONNECT_BASE, LINKIMG_BASE } from '../../../App';
-import { Pagination } from 'antd';
+import { Pagination, Checkbox, Slider, Radio } from 'antd';
 
 const Product = () => {
   const [dataProductDefault, setDataProductDefault] = useState([]);
@@ -12,6 +12,12 @@ const Product = () => {
   const [onChangePageSearchText, setOnChangePageSearchText] = useState(0);
   const [onChangePageSale, setOnChangePageSale] = useState(0);
   const [dataImage, setDataImage] = useState([]);
+  const [checked, setChecked] = useState({
+    check1: false,
+    check2: false,
+    check3: false,
+    check4: false,
+  });
   const [onChangePageNew, setOnChangePageNew] = useState(0);
   const [dataNewProd, setDataNewProd] = useState([
     {
@@ -88,7 +94,7 @@ const Product = () => {
         }
       });
     // lấy sản phẩm
-    let link = `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}`;
+    let link = `${LINKCONNECT_BASE}/allProductPage?page=${dataPage.page}&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`;
     if (state !== null) {
       if (state.idCategory !== undefined) {
         setOnChangePageNew(0);
@@ -96,7 +102,7 @@ const Product = () => {
         setOnChangePageSale(0);
         setCheckLink(1);
         setIdCateClick(state.idCategory);
-        link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}`;
+        link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${dataPage.page}&size=${dataPage.size}&idCategory=${state.idCategory}&priceBegin=0&priceEnd=1000000000`;
       } else if (state.searchText !== undefined) {
         setOnChangePageSearchText(1);
         setOnChangePageNew(0);
@@ -105,14 +111,14 @@ const Product = () => {
         setCheckLink(0);
         link = `${LINKCONNECT_BASE}/findByNamePage?page=${dataPage.page}&size=${dataPage.size}&nameProduct=${state.searchText}`;
       } else if (state.isNew !== undefined) {
-        link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=${dataPage.page}&size=${dataPage.size}`;
+        link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=${dataPage.page}&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`;
         setCheckLink(0);
         setOnChangePageSearchText(0);
         setOnChangePageSale(0);
 
         setOnChangePageNew(1);
       } else if (state.isSale !== undefined) {
-        link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=${dataPage.page}&size=${dataPage.size}`;
+        link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=${dataPage.page}&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`;
         setCheckLink(0);
         setOnChangePageSearchText(0);
         setOnChangePageNew(0);
@@ -136,6 +142,44 @@ const Product = () => {
       .then((data) => setDataCategory(data));
   }, []);
 
+  useEffect(() => {
+    let priceBegin = 0;
+    let priceEnd = 0;
+    if (!checked.check1 && !checked.check2 && !checked.check3 && !checked.check4) {
+      priceBegin = 0;
+      priceEnd = 1000000000;
+    } else if (checked.check1) {
+      priceBegin = 0;
+      priceEnd = 1000000;
+    } else if (checked.check2) {
+      priceBegin = 1000000;
+      priceEnd = 3000000;
+    } else if (checked.check3) {
+      priceBegin = 3000000;
+      priceEnd = 5000000;
+    } else if (checked.check4) {
+      priceBegin = 5000000;
+      priceEnd = 1000000000;
+    }
+    let link = `${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
+    if (checkLink === 1) {
+      link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=0&size=${dataPage.size}&idCategory=${idCateClick}&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
+    } else if (onChangePageNew === 1) {
+      link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=0&size=${dataPage.size}&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
+    } else if (onChangePageSearchText === 1) {
+      link = `${LINKCONNECT_BASE}/findByNamePage?page=0&size=${dataPage.size}&nameProduct=${state.searchText}`;
+    } else if (onChangePageSale === 1) {
+      link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=0&size=${dataPage.size}&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
+    }
+
+    fetch(link)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataProductDefault(data.content);
+        setDataPage(data);
+      });
+  }, [checked]);
+
   const getImageProductHandler = (props) => {
     var imgURL = 'defaultImage';
     dataImage.map((item) => {
@@ -151,17 +195,35 @@ const Product = () => {
     currency: 'VND',
   });
   const onChangePage = (pageNumber) => {
+    let priceBegin = 0;
+    let priceEnd = 0;
+    if (!checked.check1 && !checked.check2 && !checked.check3 && !checked.check4) {
+      priceBegin = 0;
+      priceEnd = 1000000000;
+    } else if (checked.check1) {
+      priceBegin = 0;
+      priceEnd = 1000000;
+    } else if (checked.check2) {
+      priceBegin = 1000000;
+      priceEnd = 3000000;
+    } else if (checked.check3) {
+      priceBegin = 3000000;
+      priceEnd = 5000000;
+    } else if (checked.check4) {
+      priceBegin = 5000000;
+      priceEnd = 1000000000;
+    }
     let link = `${LINKCONNECT_BASE}/allProductPage?page=${pageNumber - 1}&size=${
       dataPage.size
-    }`;
+    }&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
     if (checkLink === 1) {
       link = `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=${pageNumber - 1}&size=${
         dataPage.size
-      }&idCategory=${idCateClick}`;
+      }&idCategory=${idCateClick}&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
     } else if (onChangePageNew === 1) {
       link = `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=${pageNumber - 1}&size=${
         dataPage.size
-      }`;
+      }&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
     } else if (onChangePageSearchText === 1) {
       link = `${LINKCONNECT_BASE}/findByNamePage?page=${pageNumber - 1}&size=${
         dataPage.size
@@ -169,7 +231,7 @@ const Product = () => {
     } else if (onChangePageSale === 1) {
       link = `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=${pageNumber - 1}&size=${
         dataPage.size
-      }`;
+      }&priceBegin=${priceBegin}&priceEnd=${priceEnd}`;
     }
 
     fetch(link)
@@ -185,7 +247,10 @@ const Product = () => {
     setIdCateClick(0);
     setOnChangePageNew(0);
     setOnChangePageSale(0);
-    fetch(`${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}`)
+    setChecked({ check1: false, check2: false, check3: false, check4: false });
+    fetch(
+      `${LINKCONNECT_BASE}/allProductPage?page=0&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`
+    )
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
@@ -198,9 +263,9 @@ const Product = () => {
     setOnChangePageNew(0);
     setOnChangePageSale(0);
     window.scrollTo(0, 0);
-
+    setChecked({ check1: false, check2: false, check3: false, check4: false });
     fetch(
-      `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=0&size=${dataPage.size}&idCategory=${props.idCategory}`
+      `${LINKCONNECT_BASE}/findWithIdCategoryPage?page=0&size=${dataPage.size}&idCategory=${props.idCategory}&priceBegin=0&priceEnd=1000000000`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -211,8 +276,12 @@ const Product = () => {
   const newProdHandler = () => {
     setCheckLink(0);
     setOnChangePageSale(0);
+    setIdCateClick(0);
     setOnChangePageNew(1);
-    fetch(`${LINKCONNECT_BASE}/findByNewOneWeekPage?page=0&size=${dataPage.size}`)
+    setChecked({ check1: false, check2: false, check3: false, check4: false });
+    fetch(
+      `${LINKCONNECT_BASE}/findByNewOneWeekPage?page=0&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`
+    )
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
@@ -230,13 +299,30 @@ const Product = () => {
   const saleProdHandler = () => {
     setCheckLink(0);
     setOnChangePageNew(0);
+    setIdCateClick(0);
     setOnChangePageSale(1);
-    fetch(`${LINKCONNECT_BASE}/findByHaveDiscountPage?page=0&size=${dataPage.size}`)
+
+    setChecked({ check1: false, check2: false, check3: false, check4: false });
+    fetch(
+      `${LINKCONNECT_BASE}/findByHaveDiscountPage?page=0&size=${dataPage.size}&priceBegin=0&priceEnd=1000000000`
+    )
       .then((response) => response.json())
       .then((data) => {
         setDataProductDefault(data.content);
         setDataPage(data);
       });
+  };
+  const checkOnchange1 = (e) => {
+    setChecked({ check1: e.target.checked, check2: false, check3: false, check4: false });
+  };
+  const checkOnchange2 = (e) => {
+    setChecked({ check1: false, check2: e.target.checked, check3: false, check4: false });
+  };
+  const checkOnchange3 = (e) => {
+    setChecked({ check1: false, check2: false, check3: e.target.checked, check4: false });
+  };
+  const checkOnchange4 = (e) => {
+    setChecked({ check1: false, check2: false, check3: false, check4: e.target.checked });
   };
 
   return (
@@ -249,7 +335,13 @@ const Product = () => {
               Danh mục sản phẩm
             </h3>
             <ul className="category-list">
-              <li className="category-item category-item--active">
+              <li
+                className={`category-item ${
+                  checkLink === 1 || onChangePageNew === 1 || onChangePageSale === 1
+                    ? ''
+                    : 'category-item--active'
+                }`}
+              >
                 <div
                   className="category-item__link"
                   onClick={() => allProductCategoryHandler()}
@@ -257,12 +349,20 @@ const Product = () => {
                   Tất cả
                 </div>
               </li>
-              <li className="category-item category-item--active">
+              <li
+                className={`category-item ${
+                  onChangePageNew === 1 ? 'category-item--active' : ''
+                }`}
+              >
                 <div className="category-item__link" onClick={() => newProdHandler()}>
                   Mới ra
                 </div>
               </li>
-              <li className="category-item category-item--active">
+              <li
+                className={`category-item ${
+                  onChangePageSale === 1 ? 'category-item--active' : ''
+                }`}
+              >
                 <div className="category-item__link" onClick={() => saleProdHandler()}>
                   Giảm giá
                 </div>
@@ -278,7 +378,9 @@ const Product = () => {
                   item.isActive === 1 && (
                     <li
                       key={item.idCategory}
-                      className="category-item category-item--active"
+                      className={`category-item ${
+                        idCateClick === item.idCategory ? 'category-item--active' : ''
+                      }`}
                     >
                       <div
                         className="category-item__link"
@@ -296,9 +398,22 @@ const Product = () => {
         </div>
         <div className="col l-10">
           <div className="home-product">
+            <div className="row container-filterPrice">
+              <Checkbox checked={checked.check1} onChange={checkOnchange1}>
+                <p>Từ 0 - 1,000,000đ</p>
+              </Checkbox>
+              <Checkbox checked={checked.check2} onChange={checkOnchange2}>
+                <p>Từ 1,000,000đ - 3,000,000đ</p>
+              </Checkbox>
+              <Checkbox checked={checked.check3} onChange={checkOnchange3}>
+                <p>Từ 3,000,000đ - 5,000,000đ</p>
+              </Checkbox>
+              <Checkbox checked={checked.check4} onChange={checkOnchange4}>
+                <p>Từ 5,000,000đ trở lên</p>
+              </Checkbox>
+            </div>
             <div className="row sm-gutter">
               {dataProductDefault.map((item) => {
-                // console.log('dataNew', dataNewProd);
                 let imgName = getImageProductHandler({ idProduct: item.idProduct });
                 let checkNew = dataNewProd.findIndex(
                   (prod) => prod.idProduct === item.idProduct
