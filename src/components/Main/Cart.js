@@ -217,32 +217,8 @@ const Cart = (props) => {
       });
       return;
     }
-    //tính tổng tiền
-    let total = dataProdCart.reduce(
-      (prev, current) => {
-        if (current.content.discount !== null) {
-          if (current.content.discount.isActive === 1) {
-            return (
-              prev +
-              current.content.price *
-                (1 - current.content.discount.percent) *
-                current.quantity
-            );
-          }
-        }
-        return prev + current.content.price * current.quantity;
-      },
-      // current.content.discount !== null
-      //   ? prev +
-      //     current.content.price *
-      //       (1 - current.content.discount.percent) *
-      //       current.quantity
-      //   : prev + current.content.price * current.quantity,
-      0
-    );
     // tạo dữ liệu thêm
     let dataOrderAdd = dataInfoOrder;
-    dataOrderAdd.total = total;
     if (dataCustomer !== null) {
       dataOrderAdd.customer.idCustomer = dataCustomer.idCustomer;
     }
@@ -313,6 +289,7 @@ const Cart = (props) => {
                   });
                   localStorage.setItem('cartListId', JSON.stringify([]));
                   setDataProdCart([]);
+                  setReloadContext(true);
                 } else {
                   openNotificationWithIcon({
                     type: 'error',
@@ -370,12 +347,16 @@ const Cart = (props) => {
 
   const onChangeSelect = (value) => {
     const index = dataAddress.findIndex((item) => item.code === value);
-    setAddressChoose((prev) => ({ ...prev, tinh: dataAddress[index] }));
+    setAddressChoose({ tinh: dataAddress[index], huyen: null, xa: null });
   };
   const onSearchSelect = (value) => {};
   const onChangeSelecthuyen = (value) => {
     const index = addressChoose.tinh.districts.findIndex((item) => item.code === value);
-    setAddressChoose((prev) => ({ ...prev, huyen: addressChoose.tinh.districts[index] }));
+    setAddressChoose((prev) => ({
+      ...prev,
+      huyen: addressChoose.tinh.districts[index],
+      xa: null,
+    }));
   };
   const onSearchSelecthuyen = (value) => {};
   const onChangeSelectxa = (value) => {
@@ -433,7 +414,7 @@ const Cart = (props) => {
                           </span>
                         </div>
                       ) : (
-                        <span className="cart-table__price-original">
+                        <span className="cart-table__price">
                           {formatter.format(item.content.price)}
                         </span>
                       )}
@@ -462,7 +443,7 @@ const Cart = (props) => {
                       </div>
                     </td>
                     <td className="cart-table__wrap-total">
-                      {item.content.discount !== null && (
+                      {item.content.discount !== null ? (
                         <p className="cart-table__total">
                           {item.content.discount.isActive === 1
                             ? formatter.format(
@@ -471,6 +452,10 @@ const Cart = (props) => {
                                   item.quantity
                               )
                             : formatter.format(item.content.price * item.quantity)}
+                        </p>
+                      ) : (
+                        <p className="cart-table__total">
+                          {formatter.format(item.content.price * item.quantity)}
                         </p>
                       )}
                     </td>

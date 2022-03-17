@@ -169,124 +169,133 @@ const OrderHistory = () => {
         <div>
           {dataOrder.length !== 0 ? (
             <div>
-              {dataOrder.map((itemOrder, indexOrder) => (
-                <Card key={indexOrder} style={{ marginBottom: '10px' }}>
-                  <div className="container-history__address-status">
-                    <div className="history-address">
-                      <span className="history-address__title">Thông tin giao hàng</span>
-                      <span className="history-address__content">
-                        Mã đơn hàng: <p>{itemOrder.orders.idOrder}</p>
-                      </span>
-                      <span className="history-address__content">
-                        Tên: <p>{itemOrder.orders.customer.name}</p>
-                      </span>
-                      <span className="history-address__content">
-                        Số điện thoại: <p>{itemOrder.orders.phone}</p>
-                      </span>
-                      <span className="history-address__content">
-                        Địa chỉ: <p>{itemOrder.orders.address}</p>
-                      </span>
-                      <span className="history-address__content">
-                        Lưu ý: <p>{itemOrder.orders.note}</p>
-                      </span>
-                    </div>
+              {dataOrder.map((itemOrder, indexOrder) => {
+                let totalprice = 0;
+                itemOrder.productSearchResponses.map(
+                  (dataGetTotal) =>
+                    (totalprice = totalprice + dataGetTotal.price * dataGetTotal.quantity)
+                );
+                return (
+                  <Card key={indexOrder} style={{ marginBottom: '10px' }}>
+                    <div className="container-history__address-status">
+                      <div className="history-address">
+                        <span className="history-address__title">
+                          Thông tin giao hàng
+                        </span>
+                        <span className="history-address__content">
+                          Mã đơn hàng: <p>{itemOrder.orders.idOrder}</p>
+                        </span>
+                        <span className="history-address__content">
+                          Tên: <p>{itemOrder.orders.customer.name}</p>
+                        </span>
+                        <span className="history-address__content">
+                          Số điện thoại: <p>{itemOrder.orders.phone}</p>
+                        </span>
+                        <span className="history-address__content">
+                          Địa chỉ: <p>{itemOrder.orders.address}</p>
+                        </span>
+                        <span className="history-address__content">
+                          Lưu ý: <p>{itemOrder.orders.note}</p>
+                        </span>
+                      </div>
 
-                    <div className="history-status">
-                      <div className="history-status__icontitle">
-                        <FontAwesomeIcon
-                          icon={faTruck}
-                          size="2x"
-                          className="history-status__icon"
-                        />
-                        <span className="history-status__title">
-                          {itemOrder.orders.status.statusName}
-                        </span>
+                      <div className="history-status">
+                        <div className="history-status__icontitle">
+                          <FontAwesomeIcon
+                            icon={faTruck}
+                            size="2x"
+                            className="history-status__icon"
+                          />
+                          <span className="history-status__title">
+                            {itemOrder.orders.status.statusName}
+                          </span>
+                        </div>
+                        <div className="history-status__date">
+                          <span className="history-status__date-content">
+                            Ngày đặt hàng:{' '}
+                            <p>
+                              {' '}
+                              {moment(itemOrder.orders.dateCreate).format('DD/MM/YYYY')}
+                            </p>
+                          </span>
+                          <span className="history-status__date-content">
+                            Ngày giao hàng:{' '}
+                            <p>{moment(itemOrder.orders.dateEnd).format('DD/MM/YYYY')}</p>
+                          </span>
+                        </div>
                       </div>
-                      <div className="history-status__date">
-                        <span className="history-status__date-content">
-                          Ngày đặt hàng:{' '}
-                          <p>
-                            {' '}
-                            {moment(itemOrder.orders.dateCreate).format('DD/MM/YYYY')}
-                          </p>
-                        </span>
-                        <span className="history-status__date-content">
-                          Ngày giao hàng:{' '}
-                          <p>{moment(itemOrder.orders.dateEnd).format('DD/MM/YYYY')}</p>
-                        </span>
-                      </div>
-                    </div>
-                    {itemOrder.orders.status.idStatus === 1 && (
-                      <div>
-                        <Popconfirm
-                          title="Bạn muốn xóa?"
-                          onConfirm={() =>
-                            btnHuyDonHandler({
-                              idOrder: itemOrder.orders.idOrder,
-                            })
-                          }
-                        >
-                          <Button type="primary" danger loading={loading ? 1 : 0}>
-                            <p style={{ margin: 0, fontSize: '1.4rem' }}>Hủy đơn</p>
-                          </Button>
-                        </Popconfirm>
-                      </div>
-                    )}
-                    {itemOrder.orders.status.idStatus === 5 && (
-                      <div>
-                        {checkListRated.findIndex(
-                          (itemCheck) => itemOrder.orders.idOrder === itemCheck
-                        ) === -1 && (
-                          <Button
-                            type="primary"
-                            danger
-                            onClick={() =>
-                              btnRateHandler({
+                      {itemOrder.orders.status.idStatus === 1 && (
+                        <div>
+                          <Popconfirm
+                            title="Bạn muốn xóa?"
+                            onConfirm={() =>
+                              btnHuyDonHandler({
                                 idOrder: itemOrder.orders.idOrder,
-                                productList: itemOrder.productSearchResponses,
-                                customer: itemOrder.orders.customer,
                               })
                             }
                           >
-                            <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="history-listproduct">
-                    {itemOrder.productSearchResponses.map((itemProd, indexProd) => (
-                      <Card.Grid key={indexProd} style={gridStyle}>
-                        <div className="history-listproduct__card">
-                          <div className="history-listproduct__card-Right">
-                            <Image
-                              width={120}
-                              height={100}
-                              src={`${LINKIMG_BASE}${itemProd.imgURL}.jpg?alt=media`}
-                            />
-                            <div className="history-listproduct__card-name">
-                              <p className="history-listproduct__card-nameProduc">
-                                {itemProd.nameProduct}
-                              </p>
-                              <p className="history-listproduct__card-nameVariant">
-                                x{itemProd.quantity}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="history-listproduct__card-total">
-                            <div className="history-listproduct__card-price-old">
-                              {formatter.format(itemProd.price)}
-                            </div>
-                          </div>
+                            <Button type="primary" danger loading={loading ? 1 : 0}>
+                              <p style={{ margin: 0, fontSize: '1.4rem' }}>Hủy đơn</p>
+                            </Button>
+                          </Popconfirm>
                         </div>
-                      </Card.Grid>
-                    ))}
-                  </div>
-                  <div className="history-totalprice">
-                    Tổng tiền: <span>{formatter.format(itemOrder.orders.total)}</span>
-                  </div>
-                </Card>
-              ))}
+                      )}
+                      {itemOrder.orders.status.idStatus === 5 && (
+                        <div>
+                          {checkListRated.findIndex(
+                            (itemCheck) => itemOrder.orders.idOrder === itemCheck
+                          ) === -1 && (
+                            <Button
+                              type="primary"
+                              danger
+                              onClick={() =>
+                                btnRateHandler({
+                                  idOrder: itemOrder.orders.idOrder,
+                                  productList: itemOrder.productSearchResponses,
+                                  customer: itemOrder.orders.customer,
+                                })
+                              }
+                            >
+                              <p style={{ margin: 0, fontSize: '1.4rem' }}>Đánh giá</p>
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="history-listproduct">
+                      {itemOrder.productSearchResponses.map((itemProd, indexProd) => (
+                        <Card.Grid key={indexProd} style={gridStyle}>
+                          <div className="history-listproduct__card">
+                            <div className="history-listproduct__card-Right">
+                              <Image
+                                width={120}
+                                height={100}
+                                src={`${LINKIMG_BASE}${itemProd.imgURL}.jpg?alt=media`}
+                              />
+                              <div className="history-listproduct__card-name">
+                                <p className="history-listproduct__card-nameProduc">
+                                  {itemProd.nameProduct}
+                                </p>
+                                <p className="history-listproduct__card-nameVariant">
+                                  x{itemProd.quantity}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="history-listproduct__card-total">
+                              <div className="history-listproduct__card-price-old">
+                                {formatter.format(itemProd.price)}
+                              </div>
+                            </div>
+                          </div>
+                        </Card.Grid>
+                      ))}
+                    </div>
+                    <div className="history-totalprice">
+                      Tổng tiền: <span>{formatter.format(totalprice)}</span>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           ) : (
             <div>CHƯA CÓ ĐƠN ĐẶT HÀNG NÀO</div>
@@ -416,7 +425,15 @@ const OrderHistory = () => {
                       ))}
                     </div>
                     <div className="history-totalprice">
-                      Tổng tiền: <span>{formatter.format(itemOrder.orders.total)}</span>
+                      Tổng tiền:{' '}
+                      <span>
+                        {formatter.format(
+                          itemOrder.productSearchResponses.reduce(
+                            (prev, cur) => prev + cur.price * cur.quantity,
+                            0
+                          )
+                        )}
+                      </span>
                     </div>
                   </Card>
                 )

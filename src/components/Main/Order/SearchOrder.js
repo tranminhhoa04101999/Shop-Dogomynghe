@@ -117,7 +117,12 @@ const SearchOrder = () => {
                   <div className="searchOrder-totalprice">
                     Tổng tiền đơn hàng:{' '}
                     <p className="searchOrder-totalprice-num">
-                      {formatter.format(itemDataOrder.orders.total)}
+                      {formatter.format(
+                        itemDataOrder.productSearchResponses.reduce(
+                          (prev, current) => prev + current.price * current.quantity,
+                          0
+                        )
+                      )}
                     </p>
                   </div>
                 </div>
