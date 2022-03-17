@@ -38,8 +38,7 @@ const Account = (props) => {
         .then((response) => response.json())
         .then((data) => {
           setDataCustomer(data);
-        })
-        .catch((error) => console.log(error));
+        });
     }
   }, []);
 
@@ -93,7 +92,7 @@ const Account = (props) => {
       });
       return;
     }
-    fetch(`${LINKCONNECT_BASE}/saveCustomer`, {
+    fetch(`${LINKCONNECT_BASE}/updateInfCustomer`, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -117,7 +116,6 @@ const Account = (props) => {
         })
       );
   };
-  const updatePasswordHandler = () => {};
   return (
     <div className="grid wide">
       <div className="account-wrap">
