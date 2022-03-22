@@ -89,7 +89,7 @@ const Footer = (props) => {
             <p className="footer-label-mail">tranminhhoa0401999@gmail.com</p>
           </div>
           <div className="col l-4">
-            <p className="footer-title">Đăng kí nhận tin khuyến mãi</p>
+            {/* <p className="footer-title">Đăng kí nhận tin khuyến mãi</p>
             <p className="footer-mail-description">
               Hãy nhập email của bạn vào đây để nhận được sản phẩm mới và khuyến mãi mới
               nhất từ TMH nhé.
@@ -106,7 +106,7 @@ const Footer = (props) => {
                   className="footer-wrapper-input__icon"
                 />
               </button>
-            </div>
+            </div> */}
             <div className="footer-wrapper-icon">
               <a
                 href="https://www.facebook.com/hoatran0410/"
