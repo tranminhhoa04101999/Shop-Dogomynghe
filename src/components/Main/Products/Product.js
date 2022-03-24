@@ -126,12 +126,14 @@ const Product = () => {
       }
     }
 
-    fetch(link)
-      .then((response) => response.json())
-      .then((data) => {
-        setDataProductDefault(data.content);
-        setDataPage(data);
-      });
+    setTimeout(() => {
+      fetch(link)
+        .then((response) => response.json())
+        .then((data) => {
+          setDataProductDefault(data.content);
+          setDataPage(data);
+        });
+    });
     //có product nào thì lấy img product đó, tạm thời lấy all img
     fetch(`${LINKCONNECT_BASE}/allimghaveidprod`)
       .then((response) => response.json())

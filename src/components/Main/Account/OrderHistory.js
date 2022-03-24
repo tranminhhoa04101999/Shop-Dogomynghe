@@ -543,6 +543,9 @@ const OrderHistory = () => {
         <TabPane tab="Đã tiếp nhận" key="2">
           <RenderWithKey idStatus={2} />
         </TabPane>
+        <TabPane tab="Đã thanh toán" key="3">
+          <RenderWithKey idStatus={3} />
+        </TabPane>
         <TabPane tab="Đang giao" key="4">
           <RenderWithKey idStatus={4} />
         </TabPane>

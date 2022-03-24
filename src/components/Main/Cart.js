@@ -1,11 +1,11 @@
 import './Cart.css';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Input, Space, Image, notification, Select } from 'antd';
+import { Input, Space, Image, notification, Select, Radio } from 'antd';
 import { useState, useEffect, useContext } from 'react';
 import { LINKAPI_ADDRESS, LINKCONNECT_BASE, LINKIMG_BASE } from '../../App';
-import { useNavigate, useParams } from 'react-router-dom';
 import { ContextContainer } from '../Header/Layout';
+import PayPal from './Paypal';
 
 const INITIAL_INFOORDERS = {
   phone: '',
@@ -28,6 +28,7 @@ const Cart = (props) => {
   const [dataProdCart, setDataProdCart] = useState([]);
   const [dataProdLocal, setDataProdLocal] = useState([]);
   const [dataInfoOrder, setDataInfoOrder] = useState(INITIAL_INFOORDERS);
+  const [chooseThanhToan, setChooseThanhToan] = useState(0);
   const [name, setName] = useState('');
   const [dataCustomer, setDataCustomer] = useState(null);
   const [dataAddress, setDataAddress] = useState(null);
@@ -217,6 +218,7 @@ const Cart = (props) => {
       });
       return;
     }
+
     // tạo dữ liệu thêm
     let dataOrderAdd = dataInfoOrder;
     if (dataCustomer !== null) {
@@ -225,29 +227,8 @@ const Cart = (props) => {
     dataOrderAdd.address = `${addressChoose.tinh.name}, ${addressChoose.huyen.name}, ${addressChoose.xa.name},${dataOrderAdd.address}`;
     // kiểm tra còn hàng không trước khi đặt
     var dataResult = [];
-    await fetch(`${LINKCONNECT_BASE}/checkQuantityProduct`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        Accepts: '*/*',
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(dataProdLocal),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        dataResult = data;
-      });
-
-    if (dataResult.length === 0) {
-      // thêm mới order
-      fetch(`${LINKCONNECT_BASE}/saveOrder?name=${name}`, {
+    if (chooseThanhToan === 1) {
+      await fetch(`${LINKCONNECT_BASE}/checkQuantityProduct`, {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -260,26 +241,55 @@ const Cart = (props) => {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
-        body: JSON.stringify(dataOrderAdd),
+        body: JSON.stringify(dataProdLocal),
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data === 1) {
-            fetch(`${LINKCONNECT_BASE}/saveOrderItems`, {
-              method: 'POST',
-              mode: 'cors',
-              cache: 'no-cache',
-              credentials: 'same-origin',
-              headers: {
-                'Content-Type': 'application/json',
-                Accepts: '*/*',
+          dataResult = data;
+        });
+    }
 
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              redirect: 'follow',
-              referrerPolicy: 'no-referrer',
-              body: JSON.stringify(dataProdLocal),
-            })
+    if (dataResult.length === 0) {
+      // thêm mới order
+      fetch(
+        `${LINKCONNECT_BASE}/saveOrder?name=${name}&thanhToanPaypal=${chooseThanhToan}`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            Accepts: '*/*',
+
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow',
+          referrerPolicy: 'no-referrer',
+          body: JSON.stringify(dataOrderAdd),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data === 1) {
+            fetch(
+              `${LINKCONNECT_BASE}/saveOrderItems?thanhToanPaypal=${chooseThanhToan}`,
+              {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accepts: '*/*',
+
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer',
+                body: JSON.stringify(dataProdLocal),
+              }
+            )
               .then((response) => response.json())
               .then((data1) => {
                 if (data1 === 1) {
@@ -363,7 +373,59 @@ const Cart = (props) => {
     const index = addressChoose.huyen.wards.findIndex((item) => item.code === value);
     setAddressChoose((prev) => ({ ...prev, xa: addressChoose.huyen.wards[index] }));
   };
-  const onSearchSelectxa = (value) => {};
+  const onSearchSelectxa = () => {};
+  const thanhtoanOnchangeHandler = (e) => {
+    if (e.target.value === 1) {
+      if (dataInfoOrder.phone === '') {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Số điện thoại trống',
+          desc: 'Vui lòng điền SĐT',
+        });
+        return;
+      } else if (!/((09|03|07|08|05)+([0-9]{8})\b)/g.test(dataInfoOrder.phone)) {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'SĐT không đúng định dạng',
+          desc: 'SĐT phải 10 số hoặc các đầu số đúng',
+        });
+        return;
+      } else if (dataInfoOrder.name === '') {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Họ Tên trống',
+          desc: 'Vui lòng điền họ tên',
+        });
+        return;
+      } else if (addressChoose.tinh === null) {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Vui lòng chọn tỉnh',
+        });
+        return;
+      } else if (addressChoose.huyen === null) {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Vui lòng chọn huyện',
+        });
+        return;
+      } else if (addressChoose.xa === null) {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Vui lòng chọn xã',
+        });
+        return;
+      } else if (dataInfoOrder.address === '') {
+        openNotificationWithIcon({
+          type: 'warning',
+          message: 'Địa chỉ chi tiết trống',
+          desc: 'Vui lòng điền địa chỉ chi tiết',
+        });
+        return;
+      }
+    }
+    setChooseThanhToan(e.target.value);
+  };
   return (
     <div className="grid wide">
       <div className="cart">
@@ -608,12 +670,46 @@ const Cart = (props) => {
                     : 0}
                 </span>
               </div>
-              <div className="container-thanhtoanCOD">Thanh toán khi nhận hàng</div>
+              <div className="container-thanhtoanCOD">
+                <Radio.Group onChange={thanhtoanOnchangeHandler} value={chooseThanhToan}>
+                  <Space direction="vertical">
+                    <Radio value={0}>
+                      <div>Thanh toán khi nhận hàng COD</div>
+                    </Radio>
+                    <Radio value={1}>
+                      <div>Thanh toán Online qua Paypal</div>
+                    </Radio>
+                  </Space>
+                </Radio.Group>
+              </div>
 
               <div className="cart-right__wrap-checkout">
-                <div className="cart-right__checkout" onClick={() => orderHandler()}>
-                  <span className="cart-right__checkout-text">Đặt hàng</span>
-                </div>
+                {chooseThanhToan === 0 ? (
+                  <div className="cart-right__checkout" onClick={() => orderHandler()}>
+                    <span className="cart-right__checkout-text">Đặt hàng</span>
+                  </div>
+                ) : (
+                  <PayPal
+                    submitHandler={orderHandler}
+                    payAmount={
+                      dataProdCart.length !== 0
+                        ? dataProdCart.reduce((prev, current) => {
+                            if (current.content.discount !== null) {
+                              if (current.content.discount.isActive === 1) {
+                                return (
+                                  prev +
+                                  current.content.price *
+                                    (1 - current.content.discount.percent) *
+                                    current.quantity
+                                );
+                              }
+                            }
+                            return prev + current.content.price * current.quantity;
+                          }, 0)
+                        : 0
+                    }
+                  />
+                )}
                 <a href="/product" className="cart-right__collection">
                   <span className="cart-right__collection-text">Tiếp Tục Mua Sắm</span>
                 </a>

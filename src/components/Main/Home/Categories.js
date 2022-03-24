@@ -22,7 +22,6 @@ const Categories = (props) => {
   }, []);
 
   const onClickHandler = (props) => {
-    console.log('first', props.idCategory);
     navigate('/product', { state: { idCategory: props.idCategory } });
   };
   return (
