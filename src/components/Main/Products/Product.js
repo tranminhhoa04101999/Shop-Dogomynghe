@@ -421,7 +421,7 @@ const Product = () => {
                   (prod) => prod.idProduct === item.idProduct
                 );
                 return (
-                  <div className="col l-2-4" key={item.idProduct}>
+                  <div className="col l-2-4 product-container-show" key={item.idProduct}>
                     <NavLink
                       to="/productDetails"
                       className="home-product-item"
@@ -499,6 +499,8 @@ const Product = () => {
                         </div>
                       )}
                     </NavLink>
+                    <span className="span-1"></span>
+                    <span className="span-2"></span>
                   </div>
                 );
               })}

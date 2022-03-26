@@ -119,7 +119,7 @@ const UpdatePassword = () => {
       .catch((error) => console.log(error));
   };
   return (
-    <div>
+    <div className="container-updatepassword">
       <InputMain
         type="password"
         placeholder="Mật khẩu cũ"

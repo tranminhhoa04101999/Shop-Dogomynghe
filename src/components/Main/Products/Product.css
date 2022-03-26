@@ -228,3 +228,34 @@
   font-size: 1.5rem;
   opacity: 0.8;
 }
+.product-container-show {
+  position: relative;
+  overflow: hidden;
+}
+.product-container-show > span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: skew(45deg) translateX(-500px);
+}
+.product-container-show:hover .span-1 {
+  animation: doimau 0.75s linear;
+}
+.product-container-show:hover .span-2 {
+  animation: doimau 0.75s linear;
+  animation-delay: 0.15s;
+}
+.product-container-show:hover {
+  box-shadow: 0 4px 4px 1px #999;
+}
+@keyframes doimau {
+  0% {
+    transform: skew(45deg) translateX(-500px);
+  }
+  100% {
+    transform: skew(45deg) translateX(500px);
+  }
+}

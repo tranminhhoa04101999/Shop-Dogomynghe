@@ -70,6 +70,7 @@ const OrderHistory = () => {
   const [dataRateCurrent, setDataRateCurrent] = useState(null);
   const [dataRateAdd, setDataRateAdd] = useState([INITIAL_RATEADD]);
   const [loading, setloading] = useState(false);
+  const [reload, setReload] = useState(false);
   const [checkListRated, setcheckListRated] = useState([]);
   useEffect(() => {
     if (dataLogined !== null) {
@@ -96,6 +97,32 @@ const OrderHistory = () => {
       description: props.desc,
     });
   };
+  useEffect(() => {
+    setTimeout(() => {
+      if (dataLogined !== null) {
+        fetch(
+          `${LINKCONNECT_BASE}/searchOrderByIdAccount?idAccount=${dataLogined.idAccount}`
+        )
+          .then((response) => response.json())
+          .then((data) => setDataOrder(data));
+        fetch(
+          `${LINKCONNECT_BASE}/findCustomerByIdAccount?idAccount=${dataLogined.idAccount}`
+        )
+          .then((response) => response.json())
+          .then((data) =>
+            fetch(`${LINKCONNECT_BASE}/orderCheckRate?idCustomer=${data.idCustomer}`)
+              .then((response1) => response1.json())
+              .then((data1) => setcheckListRated(data1))
+          );
+      }
+    });
+
+    return () => {
+      setReload(false);
+      setShowModal(false);
+    };
+  }, [reload]);
+
   useEffect(() => {
     if (dataLogined !== null) {
       fetch(
@@ -176,7 +203,7 @@ const OrderHistory = () => {
                     (totalprice = totalprice + dataGetTotal.price * dataGetTotal.quantity)
                 );
                 return (
-                  <Card key={indexOrder} style={{ marginBottom: '10px' }}>
+                  <Card key={indexOrder} style={{ marginBottom: '40px' }}>
                     <div className="container-history__address-status">
                       <div className="history-address">
                         <span className="history-address__title">
@@ -310,7 +337,7 @@ const OrderHistory = () => {
             {dataOrder.map(
               (itemOrder, indexOrder) =>
                 itemOrder.orders.status.idStatus === props.idStatus && (
-                  <Card key={indexOrder} style={{ marginBottom: '10px' }}>
+                  <Card key={indexOrder} style={{ marginBottom: '40px' }}>
                     <div className="container-history__address-status">
                       <div className="history-address">
                         <span className="history-address__title">
@@ -458,7 +485,6 @@ const OrderHistory = () => {
   };
 
   const btnSubmitRateHandler = () => {
-    console.log('dataRateAdd', dataRateAdd);
     let checkEmpty = false;
     dataRateAdd.map((item) => {
       if (item.descRate === '') {
@@ -499,7 +525,6 @@ const OrderHistory = () => {
               message: data.message,
               desc: '',
             });
-            window.location.reload(false);
           } else if (data.idResult === 0) {
             openNotificationWithIcon({
               type: 'error',
@@ -507,6 +532,7 @@ const OrderHistory = () => {
               desc: '',
             });
           }
+          setReload(true);
         })
         .catch((error) => {
           openNotificationWithIcon({
@@ -529,7 +555,6 @@ const OrderHistory = () => {
     );
     setDataRateAdd(data);
   };
-  console.log('data', dataRateAdd);
 
   return (
     <div>
@@ -626,7 +651,7 @@ const OrderHistory = () => {
               </div>
             </div>
           )}
-          <div style={{ float: 'right' }}>
+          <div className="container-btn-orderhistory">
             <Button
               style={{ margin: '10px 0' }}
               type="primary"

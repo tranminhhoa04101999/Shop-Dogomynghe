@@ -74,3 +74,10 @@
   display: flex;
   justify-content: left;
 }
+.info-wrap {
+  width: 600px;
+  padding: 10px 20px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  box-shadow: 0 0 10px 1px #999;
+}

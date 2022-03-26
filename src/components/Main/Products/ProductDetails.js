@@ -246,6 +246,8 @@ const ProductDetails = (props) => {
                         onClick={() => addCartHandler()}
                       >
                         Thêm Vào Giỏ
+                        <span></span>
+                        <span></span>
                       </button>
                     </div>
                   ) : (
