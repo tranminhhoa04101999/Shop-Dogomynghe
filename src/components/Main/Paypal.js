@@ -23,6 +23,12 @@ export default function PayPal(props) {
 
   useEffect(() => {
     setTimeout(() => {
+      let exchangeRate = 1;
+      fetch(
+        `https://free.currconv.com/api/v7/convert?q=USD_VND&compact=ultra&apiKey=96ea08a1a85a5970d986`
+      )
+        .then((response) => response.json())
+        .then((data) => (exchangeRate = data.USD_VND));
       if (loaded) {
         window.paypal
           .Buttons({
@@ -32,7 +38,7 @@ export default function PayPal(props) {
                   {
                     description: 'Cool looking table',
                     amount: {
-                      value: props.payAmount,
+                      value: (props.payAmount / exchangeRate).toFixed(2),
                     },
                   },
                 ],
